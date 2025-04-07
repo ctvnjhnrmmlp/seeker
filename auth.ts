@@ -6,17 +6,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
     signIn: '/signin',
   },
-  providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-  ],
+  providers: [Google({})],
   callbacks: {
     async jwt({ token, account }) {
       if (account) {
         const response = await authorize(account);
-
         if (response) {
           token = Object.assign({}, token, {
             id_token: account.id_token,

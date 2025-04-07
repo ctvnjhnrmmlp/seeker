@@ -1,11 +1,9 @@
-'use client';
-
-import { useSession } from 'next-auth/react';
+import { auth } from '@/auth';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 
-export default function Page() {
-  const { data: session } = useSession();
+export default async function Page() {
+  const session = await auth();
 
   if (!session) {
     return redirect('/signin');
