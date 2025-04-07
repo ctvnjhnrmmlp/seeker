@@ -18,6 +18,8 @@ model User {
   sessions      Session[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+  jobs      Job[]
+  skills    Skill[]
 
   @@map("users")
 }
@@ -64,4 +66,22 @@ model VerificationRequest {
   updatedAt  DateTime @updatedAt
 
   @@unique([identifier, token])
+}
+
+model Job {
+  id          String   @id @default(uuid()) @map("_id")
+  company     String
+  position    String
+  status      String
+  appliedDate DateTime @default(now())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Skill {
+  id        String   @id @default(uuid()) @map("_id")
+  name      String
+  progress  Int      @default(0)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 }
