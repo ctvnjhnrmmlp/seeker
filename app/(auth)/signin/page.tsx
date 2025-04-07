@@ -1,3 +1,5 @@
+'use client';
+
 import { auth, signIn } from '@/auth';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,10 +10,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { GalleryVerticalEnd } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 
-export default async function LoginPage() {
-  const session = await auth();
+export default function LoginPage() {
+  // const session = await auth();
+  const { data: session } = useSession();
 
   if (session) {
     return redirect('/');
@@ -41,10 +45,7 @@ export default async function LoginPage() {
                     <Button
                       variant='outline'
                       className='w-full'
-                      onClick={async () => {
-                        'use server';
-                        await signIn('google');
-                      }}
+                      onClick={async () => signIn('google')}
                     >
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
