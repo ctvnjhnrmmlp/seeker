@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💼 Job Tracker & Skill Up Dashboard
 
-## Getting Started
+Track your job applications and upskill progress — all in one dashboard. Integrated with GitHub, LinkedIn, and a resume parser to help job seekers stay organized, focused, and job-ready.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 🧭 Job Application Pipeline
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Track job applications through stages: **Applied**, **Interview**, **Offer**
+- Add company, position, date applied, and more
+- Visualize job hunt progress in a clean dashboard
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 📚 Skill Roadmap Tracker
 
-## Learn More
+- Monitor your learning goals across skills like **HTML**, **React**, **Docker**, etc.
+- Auto-populate skill checklist from your resume
+- Track learning progress with checkboxes or percentage sliders
 
-To learn more about Next.js, take a look at the following resources:
+### 📄 Resume Upload & Parsing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Upload your resume (CSV or PDF)
+- Extract **key skills and experiences**
+- Use parsed skills to fuel your skill tracker
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🔗 GitHub Integration
 
-## Deploy on Vercel
+- OAuth login with GitHub
+- Pull your latest public contributions, repos, and activity
+- Show GitHub stats to reinforce your dev activity
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 🧑‍💼 LinkedIn Integration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- OAuth login with LinkedIn
+- Add LinkedIn profile for quick recruiter access
+
+---
+
+## ⚙️ Tech Stack
+
+| Technology       | Description                            |
+| ---------------- | -------------------------------------- |
+| **Next.js**      | React framework for frontend + backend |
+| **Tailwind CSS** | Utility-first CSS framework            |
+| **Prisma**       | ORM for PostgreSQL/SQLite              |
+| **NextAuth.js**  | Authentication with GitHub & LinkedIn  |
+| **GitHub API**   | Fetch public contributions             |
