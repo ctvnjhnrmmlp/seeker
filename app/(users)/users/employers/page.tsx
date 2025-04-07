@@ -90,18 +90,15 @@ export default function PostJobPage() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      toast({
-        title: 'Job Posted Successfully',
+      toast('Job Posted Successfully', {
         description: 'Your job listing has been published.',
       });
 
       // Redirect to jobs page or dashboard
       // router.push('/dashboard/jobs')
     } catch (error) {
-      toast({
-        title: 'Error',
+      toast('Error', {
         description: 'There was a problem posting your job.',
-        variant: 'destructive',
       });
     }
   }
