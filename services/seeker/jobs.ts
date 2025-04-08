@@ -6,6 +6,7 @@ export default class JobService {
   static endpoint = `${process.env.BASE_URL}/api/jobs`;
 
   static async createJob(
+    email: string,
     values: z.infer<typeof JobSchema>
   ): Promise<Job | null> {
     try {
@@ -14,6 +15,7 @@ export default class JobService {
         body: JSON.stringify(values),
         headers: {
           'Content-Type': 'application/json',
+          'X-User-Email': email,
         },
       });
 

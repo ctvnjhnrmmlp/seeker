@@ -33,15 +33,17 @@ import JobService from '@/services/seeker/jobs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { Briefcase, Building, DollarSign, Info, MapPin } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { redirect, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-export default function PostJobPage() {
+export default function Page() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('edit');
+  const { data: session } = useSession();
 
   const form = useForm<z.infer<typeof JobSchema>>({
     resolver: zodResolver(JobSchema),
@@ -63,7 +65,7 @@ export default function PostJobPage() {
 
   const createJobMutation = useMutation({
     mutationFn: async (job: z.infer<typeof JobSchema>) =>
-      await JobService.createJob(job),
+      await JobService.createJob('', job),
 
     onSuccess: () => {
       toast('Job Posted Successfully', {
@@ -82,6 +84,10 @@ export default function PostJobPage() {
   async function onSubmit(values: z.infer<typeof JobSchema>) {
     createJobMutation.mutateAsync(values);
   }
+
+  // if (!session) {
+  //   return redirect('/signin');
+  // }
 
   return (
     <main>
