@@ -1,12 +1,5 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Briefcase, Building, DollarSign, Info, MapPin } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -35,37 +28,23 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
+import { JobSchema } from '@/lib/zod';
+import JobService from '@/services/seeker/jobs';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import { Briefcase, Building, DollarSign, Info, MapPin } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-
-const formSchema = z.object({
-  title: z
-    .string()
-    .min(5, { message: 'Job title must be at least 5 characters' }),
-  company: z.string().min(2, { message: 'Company name is required' }),
-  location: z.string().min(2, { message: 'Location is required' }),
-  jobType: z.string(),
-  salaryMin: z.string(),
-  salaryMax: z.string(),
-  description: z
-    .string()
-    .min(50, { message: 'Description must be at least 50 characters' }),
-  requirements: z
-    .string()
-    .min(20, { message: 'Requirements must be at least 20 characters' }),
-  applicationUrl: z
-    .string()
-    .url({ message: 'Please enter a valid URL' })
-    .optional()
-    .or(z.literal('')),
-  contactEmail: z.string().email({ message: 'Please enter a valid email' }),
-});
+import { z } from 'zod';
 
 export default function PostJobPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('edit');
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof JobSchema>>({
+    resolver: zodResolver(JobSchema),
     defaultValues: {
       title: '',
       company: '',
@@ -82,13 +61,14 @@ export default function PostJobPage() {
 
   const formValues = form.watch();
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      // Here you would typically send the data to your API
-      console.log(values);
+  const createJobMutation = useMutation({
+    mutationFn: async (job: z.infer<typeof JobSchema>) =>
+      await JobService.createJob(job),
+  });
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+  async function onSubmit(values: z.infer<typeof JobSchema>) {
+    try {
+      createJobMutation.mutate(values);
 
       toast('Job Posted Successfully', {
         description: 'Your job listing has been published.',
@@ -105,10 +85,9 @@ export default function PostJobPage() {
 
   return (
     <main>
-      <section>
+      <section className='flex justify-center w-full'>
         <div className='container max-w-4xl py-10'>
           <h1 className='text-3xl font-bold mb-6'>Post a New Job</h1>
-
           <Tabs
             value={activeTab}
             onValueChange={setActiveTab}
