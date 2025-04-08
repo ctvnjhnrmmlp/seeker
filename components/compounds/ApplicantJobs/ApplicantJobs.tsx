@@ -21,6 +21,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
+import JobService from '@/services/seeker/jobs';
+import { convertToDateFormat } from '@/utilities/functions';
+import { useQuery } from '@tanstack/react-query';
 import {
   BookmarkIcon,
   Briefcase,
@@ -243,26 +246,33 @@ export default function ApplicantJobs() {
   const [showFilters, setShowFilters] = useState(false);
   const jobsPerPage = 6;
 
-  // Get unique values for filters
+  const { data: jobsServer = [] } = useQuery({
+    queryKey: ['getJobsApplicants'],
+    queryFn: async () => await JobService.readJobs(),
+  });
+
   const locations = [
     'all',
-    ...Array.from(new Set(JOBS.map((job) => job.location))),
+    ...Array.from(new Set(jobsServer.map((job) => job.location))),
   ];
 
-  const jobTypes = ['all', ...Array.from(new Set(JOBS.map((job) => job.type)))];
-
-  const categories = [
+  const jobTypes = [
     'all',
-    ...Array.from(new Set(JOBS.map((job) => job.category))),
+    ...Array.from(new Set(jobsServer.map((job) => job.type))),
   ];
 
-  const experienceLevels = [
-    'all',
-    ...Array.from(new Set(JOBS.map((job) => job.experience))),
-  ];
+  // const categories = [
+  //   'all',
+  //   ...Array.from(new Set(JOBS.map((job) => job.category))),
+  // ];
+
+  // const experienceLevels = [
+  //   'all',
+  //   ...Array.from(new Set(JOBS.map((job) => job.experience))),
+  // ];
 
   // Filter jobs based on search query and filters
-  const filteredJobs = JOBS.filter((job) => {
+  const filteredJobs = jobsServer.filter((job) => {
     const matchesSearch =
       job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -271,46 +281,45 @@ export default function ApplicantJobs() {
     const matchesLocation =
       locationFilter === 'all' || job.location === locationFilter;
     const matchesType = typeFilter === 'all' || job.type === typeFilter;
-    const matchesCategory =
-      categoryFilter === 'all' || job.category === categoryFilter;
-    const matchesExperience =
-      experienceFilter === 'all' || job.experience === experienceFilter;
+    // const matchesCategory =
+    //   categoryFilter === 'all' || job.category === categoryFilter;
+    // const matchesExperience =
+    //   experienceFilter === 'all' || job.experience === experienceFilter;
 
     return (
-      matchesSearch &&
-      matchesLocation &&
-      matchesType &&
-      matchesCategory &&
-      matchesExperience
+      matchesSearch && matchesLocation && matchesType
+      // &&
+      // matchesCategory &&
+      // matchesExperience
     );
   });
 
   // Sort jobs
   const sortedJobs = [...filteredJobs].sort((a, b) => {
     // First sort by featured status
-    if (a.featured && !b.featured) return -1;
-    if (!a.featured && b.featured) return 1;
+    // if (a.featured && !b.featured) return -1;
+    // if (!a.featured && b.featured) return 1;
 
-    // Then sort by the selected sort option
-    if (sortBy === 'newest') {
-      // Assuming newer jobs have "days" or "weeks" in their posted string
-      const aTime = a.posted.includes('day')
-        ? Number.parseInt(a.posted)
-        : a.posted.includes('week')
-        ? Number.parseInt(a.posted) * 7
-        : 30;
-      const bTime = b.posted.includes('day')
-        ? Number.parseInt(b.posted)
-        : b.posted.includes('week')
-        ? Number.parseInt(b.posted) * 7
-        : 30;
-      return aTime - bTime;
-    } else if (sortBy === 'salary') {
-      // Extract the minimum salary for sorting
-      const aMinSalary = Number.parseInt(a.salary.replace(/[^0-9]/g, ''));
-      const bMinSalary = Number.parseInt(b.salary.replace(/[^0-9]/g, ''));
-      return bMinSalary - aMinSalary;
-    }
+    // // Then sort by the selected sort option
+    // if (sortBy === 'newest') {
+    //   // Assuming newer jobs have "days" or "weeks" in their posted string
+    //   const aTime = a.posted.includes('day')
+    //     ? Number.parseInt(a.posted)
+    //     : a.posted.includes('week')
+    //     ? Number.parseInt(a.posted) * 7
+    //     : 30;
+    //   const bTime = b.posted.includes('day')
+    //     ? Number.parseInt(b.posted)
+    //     : b.posted.includes('week')
+    //     ? Number.parseInt(b.posted) * 7
+    //     : 30;
+    //   return aTime - bTime;
+    // } else if (sortBy === 'salary') {
+    //   // Extract the minimum salary for sorting
+    //   const aMinSalary = Number.parseInt(a.salary.replace(/[^0-9]/g, ''));
+    //   const bMinSalary = Number.parseInt(b.salary.replace(/[^0-9]/g, ''));
+    //   return bMinSalary - aMinSalary;
+    // }
 
     // Default: relevance (featured first, then alphabetical)
     return a.title.localeCompare(b.title);
@@ -347,7 +356,6 @@ export default function ApplicantJobs() {
 
   return (
     <div className='min-h-screen bg-background'>
-      {/* Hero Section */}
       <div className='bg-gradient-to-b from-primary/10 to-background py-12 md:py-20'>
         <div className='container'>
           <div className='max-w-3xl mx-auto text-center'>
@@ -359,8 +367,6 @@ export default function ApplicantJobs() {
               Browse through our curated list of job openings from top
               companies.
             </p>
-
-            {/* Main Search Bar */}
             <div className='relative max-w-2xl mx-auto'>
               <Search className='absolute left-3 top-3 h-5 w-5 text-muted-foreground' />
               <Input
@@ -384,10 +390,8 @@ export default function ApplicantJobs() {
           </div>
         </div>
       </div>
-
       <div className='container py-8'>
-        {/* Mobile Filters Sheet */}
-        <Sheet open={showFilters} onOpenChange={setShowFilters}>
+        {/* <Sheet open={showFilters} onOpenChange={setShowFilters}>
           <SheetContent side='left' className='w-[300px] sm:w-[400px]'>
             <SheetHeader>
               <SheetTitle>Filter Jobs</SheetTitle>
@@ -417,7 +421,6 @@ export default function ApplicantJobs() {
                   </SelectContent>
                 </Select>
               </div>
-
               <div className='space-y-2'>
                 <h3 className='text-sm font-medium'>Job Type</h3>
                 <Select
@@ -439,7 +442,6 @@ export default function ApplicantJobs() {
                   </SelectContent>
                 </Select>
               </div>
-
               <div className='space-y-2'>
                 <h3 className='text-sm font-medium'>Category</h3>
                 <Select
@@ -461,7 +463,6 @@ export default function ApplicantJobs() {
                   </SelectContent>
                 </Select>
               </div>
-
               <div className='space-y-2'>
                 <h3 className='text-sm font-medium'>Experience Level</h3>
                 <Select
@@ -483,7 +484,6 @@ export default function ApplicantJobs() {
                   </SelectContent>
                 </Select>
               </div>
-
               <div className='space-y-2'>
                 <h3 className='text-sm font-medium'>Sort By</h3>
                 <RadioGroup
@@ -504,7 +504,6 @@ export default function ApplicantJobs() {
                   </div>
                 </RadioGroup>
               </div>
-
               <div className='pt-4 flex justify-between'>
                 <Button variant='outline' onClick={clearAllFilters}>
                   Clear All
@@ -515,11 +514,8 @@ export default function ApplicantJobs() {
               </div>
             </div>
           </SheetContent>
-        </Sheet>
-
-        {/* Desktop Filters and Results */}
+        </Sheet> */}
         <div className='flex flex-col md:flex-row gap-6'>
-          {/* Desktop Filters Sidebar */}
           <div className='hidden md:block w-64 space-y-6'>
             <Card>
               <CardHeader className='pb-3'>
@@ -547,7 +543,6 @@ export default function ApplicantJobs() {
                     </SelectContent>
                   </Select>
                 </div>
-
                 <div className='space-y-2'>
                   <h3 className='text-sm font-medium'>Job Type</h3>
                   <div className='space-y-2'>
@@ -570,10 +565,7 @@ export default function ApplicantJobs() {
                       ))}
                   </div>
                 </div>
-
-                <Separator />
-
-                <div className='space-y-2'>
+                {/* <div className='space-y-2'>
                   <h3 className='text-sm font-medium'>Category</h3>
                   <Select
                     value={categoryFilter}
@@ -593,9 +585,9 @@ export default function ApplicantJobs() {
                       ))}
                     </SelectContent>
                   </Select>
-                </div>
-
-                <div className='space-y-2'>
+                </div> */}
+                {/* <Separator /> */}
+                {/* <div className='space-y-2'>
                   <h3 className='text-sm font-medium'>Experience Level</h3>
                   <div className='space-y-2'>
                     {experienceLevels
@@ -622,10 +614,8 @@ export default function ApplicantJobs() {
                         </div>
                       ))}
                   </div>
-                </div>
-
+                </div> */}
                 <Separator />
-
                 <div className='space-y-2'>
                   <h3 className='text-sm font-medium'>Sort By</h3>
                   <RadioGroup
@@ -649,7 +639,6 @@ export default function ApplicantJobs() {
                     </div>
                   </RadioGroup>
                 </div>
-
                 <Button
                   variant='outline'
                   className='w-full'
@@ -660,10 +649,7 @@ export default function ApplicantJobs() {
               </CardContent>
             </Card>
           </div>
-
-          {/* Job Listings */}
           <div className='flex-1'>
-            {/* Results Count and Sort (Mobile) */}
             <div className='flex justify-between items-center mb-4'>
               <p className='text-sm text-muted-foreground'>
                 Showing{' '}
@@ -692,8 +678,6 @@ export default function ApplicantJobs() {
                 </Select>
               </div>
             </div>
-
-            {/* Job Cards */}
             {currentJobs.length === 0 ? (
               <div className='text-center py-16 bg-muted/30 rounded-lg'>
                 <Briefcase className='mx-auto h-12 w-12 text-muted-foreground/50 mb-4' />
@@ -711,15 +695,13 @@ export default function ApplicantJobs() {
                 {currentJobs.map((job) => (
                   <Card
                     key={job.id}
-                    className={`overflow-hidden transition-all hover:shadow-md ${
-                      job.featured ? 'border-primary/50' : ''
-                    }`}
+                    className={`overflow-hidden transition-all hover:shadow-md`}
                   >
-                    {job.featured && (
+                    {/* {job.featured && (
                       <div className='bg-primary text-primary-foreground text-xs font-medium px-3 py-1 absolute right-4 top-4 rounded-full'>
                         Featured
                       </div>
-                    )}
+                    )} */}
                     <CardContent className='p-6'>
                       <div className='flex flex-col md:flex-row md:items-start md:justify-between gap-4'>
                         <div className='space-y-3'>
@@ -741,11 +723,9 @@ export default function ApplicantJobs() {
                               </p>
                             </div>
                           </div>
-
                           <p className='text-sm line-clamp-2'>
                             {job.description}
                           </p>
-
                           <div className='flex flex-wrap gap-2 text-sm'>
                             <div className='flex items-center gap-1 text-muted-foreground bg-muted px-2 py-1 rounded-md'>
                               <MapPin className='h-3.5 w-3.5' />
@@ -757,15 +737,18 @@ export default function ApplicantJobs() {
                             </div>
                             <div className='flex items-center gap-1 text-muted-foreground bg-muted px-2 py-1 rounded-md'>
                               <DollarSign className='h-3.5 w-3.5' />
-                              <span>{job.salary}</span>
+                              <span>
+                                ${job.minimumSalary} - ${job.maximumSalary}
+                              </span>
                             </div>
                             <div className='flex items-center gap-1 text-muted-foreground bg-muted px-2 py-1 rounded-md'>
                               <Clock className='h-3.5 w-3.5' />
-                              <span>{job.posted}</span>
+                              <span>
+                                {convertToDateFormat(job.createdAt.toString())}
+                              </span>
                             </div>
                           </div>
                         </div>
-
                         <div className='flex flex-row md:flex-col gap-2 mt-2 md:mt-0 md:min-w-[120px] md:items-end'>
                           <Button asChild className='flex-1 md:w-full'>
                             <Link href={`/careers/${job.id}`}>Apply Now</Link>
@@ -792,8 +775,6 @@ export default function ApplicantJobs() {
                 ))}
               </div>
             )}
-
-            {/* Pagination */}
             {totalPages > 1 && (
               <div className='flex justify-center mt-8'>
                 <div className='flex items-center gap-1'>
@@ -863,8 +844,6 @@ export default function ApplicantJobs() {
           </div>
         </div>
       </div>
-
-      {/* Job Seeker CTA Section */}
       <div className='bg-muted py-12 mt-12'>
         <div className='container'>
           <div className='max-w-3xl mx-auto text-center'>

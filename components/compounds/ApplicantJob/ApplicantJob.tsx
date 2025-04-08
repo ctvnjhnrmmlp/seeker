@@ -155,11 +155,6 @@ export default function ApplicantJob({ id }: { id: string }) {
     coverLetter: '',
   });
 
-  const { data: jobsServer = [] } = useQuery({
-    queryKey: ['getJobsApplicants'],
-    queryFn: async () => await JobService.readJobs(),
-  });
-
   if (!job) {
     return (
       <div className='container py-10 text-center'>
