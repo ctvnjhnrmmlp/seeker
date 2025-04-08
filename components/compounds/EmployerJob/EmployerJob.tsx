@@ -206,7 +206,6 @@ export default function EmployerJob({
               >
                 Delete
               </Button>
-              <Button onClick={form.handleSubmit(onSubmit)}>Update</Button>
             </CardFooter>
           </Card>
         </TabsContent>
