@@ -81,7 +81,6 @@ export default function EmployerDashboard({ email }: { email: string }) {
           </Button>
         </Link>
       </div>
-
       <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between pb-2'>
@@ -104,7 +103,6 @@ export default function EmployerDashboard({ email }: { email: string }) {
           </CardContent>
         </Card>
       </div>
-
       <Tabs defaultValue='jobs' className='space-y-4'>
         <TabsList>
           <TabsTrigger value='jobs'>Recent Jobs</TabsTrigger>
@@ -113,36 +111,40 @@ export default function EmployerDashboard({ email }: { email: string }) {
         <TabsContent value='jobs' className='space-y-4'>
           <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
             {jobsRecentServer?.map((job) => (
-              <Card key={job.id}>
-                <CardHeader className='pb-2'>
-                  <CardTitle className='text-base'>{job.title}</CardTitle>
-                  <CardDescription className='flex items-center gap-1'>
-                    {job.location} • {job.company}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className='pb-2'>
-                  <div className='grid grid-cols-2 gap-2 text-sm'>
-                    <div className='flex flex-col'>
-                      <span className='text-muted-foreground'>Salary</span>
-                      <span className='font-medium'>
-                        ${job.minimumSalary} - ${job.maximumSalary}
+              <Link key={job.id} href={`/users/employers/jobs/${job.id}`}>
+                <Card className='h-full'>
+                  <CardHeader className='pb-2'>
+                    <CardTitle className='text-base'>{job.title}</CardTitle>
+                    <CardDescription className='flex items-center gap-1'>
+                      {job.location} • {job.company}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className='pb-2'>
+                    <div className='grid grid-cols-2 gap-2 text-sm'>
+                      <div className='flex flex-col'>
+                        <span className='text-muted-foreground'>Salary</span>
+                        <span className='font-medium'>
+                          ${job.minimumSalary} - ${job.maximumSalary}
+                        </span>
+                      </div>
+                      <div className='flex flex-col'>
+                        <span className='text-muted-foreground'>Type</span>
+                        <span className='font-medium'>
+                          {_.capitalize(job.type)}
+                        </span>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter className='flex items-center justify-between pt-0'>
+                    <div className='flex items-center gap-1 text-xs text-muted-foreground'>
+                      <Clock className='h-3 w-3' />
+                      <span>
+                        {convertToDateFormat(job.createdAt.toString())}
                       </span>
                     </div>
-                    <div className='flex flex-col'>
-                      <span className='text-muted-foreground'>Type</span>
-                      <span className='font-medium'>
-                        {_.capitalize(job.type)}
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className='flex items-center justify-between pt-0'>
-                  <div className='flex items-center gap-1 text-xs text-muted-foreground'>
-                    <Clock className='h-3 w-3' />
-                    <span>{convertToDateFormat(job.createdAt.toString())}</span>
-                  </div>
-                </CardFooter>
-              </Card>
+                  </CardFooter>
+                </Card>
+              </Link>
             ))}
           </div>
           <div className='flex'>
