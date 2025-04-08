@@ -1,5 +1,4 @@
 import { Prisma } from '@/database/database';
-import { Prisma as PrismaClientType } from '@prisma/client';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -39,40 +38,26 @@ export async function POST(req: Request) {
 
     const searchParams = new URLSearchParams(body);
 
-    const searchableFields: (keyof PrismaClientType.JobWhereInput)[] = [
-      'title',
-      'company',
-      'location',
-      'type',
-      'description',
-      'requirements',
-      'url',
-      'email',
-    ];
+    const filters: Record<string, any> = {};
 
-    const filters: PrismaClientType.JobWhereInput = {};
-
-    for (const key of Object.keys(body)) {
-      if (
-        searchableFields.includes(key as keyof PrismaClientType.JobWhereInput)
-      ) {
-        filters[key as keyof PrismaClientType.JobWhereInput] = {
-          contains: body[key],
-          mode: 'insensitive',
-        } as any;
-      }
-    }
+    searchParams.forEach((value, key) => {
+      filters[key] = {
+        contains: value,
+        mode: 'insensitive',
+      };
+    });
 
     const jobs = await Prisma.job.findMany({
-      where: filters,
+      where: {
+        ...filters,
+      },
     });
 
     return NextResponse.json(
       { message: 'Jobs found successfully.', data: jobs },
       { status: 200 }
     );
-  } catch (error: unknown) {
-    const err = error as Error;
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }
