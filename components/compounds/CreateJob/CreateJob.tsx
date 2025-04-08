@@ -71,14 +71,12 @@ export default function Page() {
       email: string;
       job: z.infer<typeof JobSchema>;
     }) => await JobService.createJob({ email, job }),
-
     onSuccess: () => {
       toast('Job Posted Successfully', {
         description: 'Your job listing has been published.',
       });
       router.push('/users/employers');
     },
-
     onError: () => {
       toast('Error', {
         description: 'There was a problem posting your job.',

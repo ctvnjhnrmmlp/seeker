@@ -16,7 +16,11 @@ export default async function Page({
   return (
     <main>
       <section className='flex justify-center w-full'>
-        <ApplicantJob email={session.user.email} id={(await params).id} />
+        <ApplicantJob
+          email={session.user.email}
+          userId={session.user.id}
+          jobId={(await params).id}
+        />
       </section>
     </main>
   );

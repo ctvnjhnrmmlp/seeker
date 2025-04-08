@@ -22,9 +22,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
+import ApplicationService from '@/services/seeker/applications';
 import JobService from '@/services/seeker/jobs';
 import { convertToDateFormat } from '@/utilities/functions';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
 import {
   ArrowLeft,
@@ -146,10 +147,12 @@ const JOBS = [
 
 export default function ApplicantJob({
   email,
-  id,
+  userId,
+  jobId,
 }: {
   email: string;
-  id: string;
+  userId: string;
+  jobId: string;
 }) {
   const router = useRouter();
   const [isSaved, setIsSaved] = useState(false);
@@ -161,11 +164,6 @@ export default function ApplicantJob({
     phone: '',
     resume: null as File | null,
     coverLetter: '',
-  });
-
-  const { data: jobServer } = useQuery({
-    queryKey: ['getJobApplicant'],
-    queryFn: async () => await JobService.findJobById({ email, id }),
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -196,6 +194,44 @@ export default function ApplicantJob({
       });
     }, 1500);
   };
+
+  const createApplicationMutation = useMutation({
+    mutationFn: async ({
+      email,
+      userId,
+      jobId,
+    }: {
+      email: string;
+      userId: string;
+      jobId: string;
+    }) => {
+      setIsApplying(true);
+      return await ApplicationService.createApplication({
+        email,
+        userId,
+        jobId,
+      });
+    },
+    onSuccess: () => {
+      toast('Application created.', {
+        description: 'Your application has been created.',
+      });
+      router.push('/users/applicants');
+    },
+    onError: () => {
+      toast('Application failed.', {
+        description: 'There was a problem creaeting your application.',
+      });
+    },
+    onSettled: () => {
+      setIsApplying(false);
+    },
+  });
+
+  const { data: jobServer } = useQuery({
+    queryKey: ['getJobApplicant'],
+    queryFn: async () => await JobService.findJobById({ email, id: jobId }),
+  });
 
   return (
     <div className='min-h-screen bg-background'>
@@ -355,6 +391,15 @@ export default function ApplicantJob({
           <div className='space-y-6'>
             <Card>
               <CardContent className='space-y-4'>
+                {/* <Button
+                  className='w-full'
+                  size='lg'
+                  onClick={() =>
+                    createApplicationMutation.mutate({ email, userId, jobId })
+                  }
+                >
+                  Apply Now
+                </Button> */}
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button className='w-full' size='lg'>
@@ -365,12 +410,12 @@ export default function ApplicantJob({
                     <DialogHeader>
                       <DialogTitle>Apply for {jobServer?.title}</DialogTitle>
                       <DialogDescription>
-                        Complete the form below to submit your application to{' '}
+                        {/* Complete the form below to submit your application to{' '} */}
                         {jobServer?.company}.
                       </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleSubmitApplication}>
-                      <div className='grid gap-4 py-4'>
+                      {/* <div className='grid gap-4 py-4'>
                         <div className='grid gap-2'>
                           <Label htmlFor='name'>Full Name</Label>
                           <Input
@@ -461,11 +506,23 @@ export default function ApplicantJob({
                             className='min-h-[100px]'
                           />
                         </div>
-                      </div>
+                      </div> */}
                       <DialogFooter>
-                        <Button type='submit' disabled={isApplying}>
+                        <Button
+                          disabled={isApplying}
+                          onClick={() =>
+                            createApplicationMutation.mutate({
+                              email,
+                              userId,
+                              jobId,
+                            })
+                          }
+                        >
                           {isApplying ? 'Submitting...' : 'Submit Application'}
                         </Button>
+                        {/* <Button type='submit' disabled={isApplying}>
+                          {isApplying ? 'Submitting...' : 'Submit Application'}
+                        </Button> */}
                       </DialogFooter>
                     </form>
                   </DialogContent>
