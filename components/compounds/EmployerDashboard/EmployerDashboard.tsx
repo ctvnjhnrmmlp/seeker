@@ -54,12 +54,12 @@ export default function EmployerDashboard({ email }: { email: string }) {
     },
   ];
 
-  const { data: jobsServer, status: jobsServerStatus } = useQuery({
+  const { data: jobsServer } = useQuery({
     queryKey: ['getJobs'],
     queryFn: async () => await JobService.readJobs(),
   });
 
-  const { data: jobsRecentServer, status: jobsRecentServerStatus } = useQuery({
+  const { data: jobsRecentServer } = useQuery({
     queryKey: ['getJobsRecent'],
     queryFn: async () =>
       await JobService.findJobsByQuery({
