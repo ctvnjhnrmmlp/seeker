@@ -25,6 +25,7 @@ import { Textarea } from '@/components/ui/textarea';
 import JobService from '@/services/seeker/jobs';
 import { convertToDateFormat } from '@/utilities/functions';
 import { useQuery } from '@tanstack/react-query';
+import _ from 'lodash';
 import {
   ArrowLeft,
   BookmarkIcon,
@@ -196,19 +197,13 @@ export default function ApplicantJob({
     }, 1500);
   };
 
-  // const similarJobs = JOBS.filter(
-  //   (j) =>
-  //     j.id !== job.id &&
-  //     (j.category === job.category || j.experience === job.experience)
-  // ).slice(0, 3);
-
   return (
     <div className='min-h-screen bg-background'>
       <div className='container py-10'>
         <Button
           variant='ghost'
           className='mb-6'
-          onClick={() => router.push('/careers')}
+          onClick={() => router.push('/users/applicants/jobs')}
         >
           <ArrowLeft className='mr-2 h-4 w-4' /> Back to Jobs
         </Button>
@@ -247,7 +242,7 @@ export default function ApplicantJob({
                     <span className='text-muted-foreground'>Job Type</span>
                     <div className='flex items-center gap-1 font-medium'>
                       <Briefcase className='h-4 w-4' />
-                      <span>{jobServer?.type}</span>
+                      <span>{_.capitalize(jobServer?.type)}</span>
                     </div>
                   </div>
                   <div className='flex flex-col gap-1'>
@@ -260,13 +255,6 @@ export default function ApplicantJob({
                       </span>
                     </div>
                   </div>
-                  {/* <div className='flex flex-col gap-1'>
-                    <span className='text-muted-foreground'>Experience</span>
-                    <div className='flex items-center gap-1 font-medium'>
-                      <FileText className='h-4 w-4' />
-                      <span>{job.experience}</span>
-                    </div>
-                  </div> */}
                   <div className='flex flex-col gap-1'>
                     <span className='text-muted-foreground'>Posted</span>
                     <div className='flex items-center gap-1 font-medium'>
@@ -288,7 +276,7 @@ export default function ApplicantJob({
                       <h3 className='font-semibold text-lg mb-3'>
                         Description
                       </h3>
-                      <p className='text-muted-foreground'>
+                      <p className='text-muted-foreground whitespace-pre-line'>
                         {jobServer?.description}
                       </p>
                     </div>
@@ -296,7 +284,7 @@ export default function ApplicantJob({
                       <h3 className='font-semibold text-lg mb-3'>
                         Requirements
                       </h3>
-                      <p className='text-muted-foreground'>
+                      <p className='text-muted-foreground whitespace-pre-line'>
                         {jobServer?.requirements}
                       </p>
                     </div>
@@ -524,18 +512,14 @@ export default function ApplicantJob({
               </CardHeader>
               <CardContent className='space-y-4'>
                 <div className='flex flex-col gap-1'>
-                  <span className='text-sm font-medium'>Email:</span>
-                  <a
+                  <Link
                     href={`mailto:${jobServer?.email}`}
                     className='text-sm text-primary hover:underline'
                   >
                     {jobServer?.email}
-                  </a>
+                  </Link>
                 </div>
                 <div className='flex flex-col gap-1'>
-                  <span className='text-sm font-medium'>
-                    Application Deadline:
-                  </span>
                   <div className='flex items-center gap-2 text-sm text-muted-foreground'>
                     <Calendar className='h-4 w-4' />
                     <span>Open until filled</span>

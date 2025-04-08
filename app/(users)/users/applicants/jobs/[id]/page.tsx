@@ -14,8 +14,10 @@ export default async function Page({
   }
 
   return (
-    <>
-      <ApplicantJob email={session.user.email} id={(await params).id} />
-    </>
+    <main>
+      <section className='flex justify-center w-full'>
+        <ApplicantJob email={session.user.email} id={(await params).id} />
+      </section>
+    </main>
   );
 }
