@@ -1,60 +1,95 @@
 import { Prisma } from '@/database/database';
 import { NextResponse } from 'next/server';
 
+type JobRequestBody = {
+  title: string;
+  company: string;
+  location: string;
+  jobType: string;
+  salaryMin: string | number;
+  salaryMax: string | number;
+  description: string;
+  requirements: string;
+  applicationUrl: string;
+};
+
 export async function POST(req: Request) {
   try {
-    const request = await req.json();
-    const email = req.headers.get('x-user-email') as string;
+    const email = req.headers.get('x-user-email');
 
-    const user = await Prisma.user.findUnique({
-      where: {
-        email: email,
-      },
-    });
-
-    if (!user || !email) {
+    if (!email) {
       return NextResponse.json(
-        { error: 'Bad Request' },
-        {
-          status: 400,
-        }
+        { error: 'Missing user email in headers.' },
+        { status: 400 }
       );
     }
+
+    const user = await Prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found.' }, { status: 404 });
+    }
+
+    const body: JobRequestBody = await req.json();
 
     const {
       title,
       company,
       location,
-      jobType: type,
-      salaryMin: minimumSalary,
-      salaryMax: maximumSalary,
+      jobType,
+      salaryMin,
+      salaryMax,
       description,
       requirements,
-      applicationUrl: url,
-    } = request;
+      applicationUrl,
+    } = body;
 
-    await Prisma.job.create({
+    if (
+      !title ||
+      !company ||
+      !location ||
+      !jobType ||
+      !salaryMin ||
+      !salaryMax ||
+      !description ||
+      !requirements ||
+      !applicationUrl
+    ) {
+      return NextResponse.json(
+        { error: 'All fields are required.' },
+        { status: 400 }
+      );
+    }
+
+    const newJob = await Prisma.job.create({
       data: {
         title,
         company,
         location,
-        type,
-        minimumSalary,
-        maximumSalary,
+        type: jobType,
+        minimumSalary: Number(salaryMin),
+        maximumSalary: Number(salaryMax),
         description,
         requirements,
-        url,
+        url: applicationUrl,
         email,
         user: {
-          connect: {
-            id: user.id,
-          },
+          connect: { id: user.id },
         },
       },
     });
 
-    console.log(email);
+    return NextResponse.json(
+      { message: 'Job posted successfully.', job: newJob },
+      { status: 201 }
+    );
   } catch (error) {
-    console.error(error);
+    console.error('Error posting job:', error);
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }
