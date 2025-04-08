@@ -18,11 +18,9 @@ import {
   Home,
   LogOut,
   Menu,
-  PlusCircle,
   Search,
   Settings,
   User,
-  Users,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -50,12 +48,6 @@ export default function ApplicantLayout({ children }: { children: ReactNode }) {
       href: '/users/applicants/saves',
       icon: FileText,
       active: pathname === '/users/applicants/saves',
-    },
-    {
-      label: 'Candidates',
-      href: '/users/employers/candidates',
-      icon: Users,
-      active: pathname === '/users/employers/candidates',
     },
     {
       label: 'Search',
@@ -139,21 +131,10 @@ export default function ApplicantLayout({ children }: { children: ReactNode }) {
                 className='flex items-center gap-2 font-semibold'
               >
                 <Building className='h-5 w-5' />
-                <span>Employer Portal</span>
+                <span>Applicant Portal</span>
               </Link>
             </div>
             <nav className='flex-1 overflow-auto py-4'>
-              <div className='px-3'>
-                <Link
-                  href='/users/employers/create'
-                  onClick={() => setIsMobileNavOpen(false)}
-                >
-                  <Button className='w-full justify-start gap-2'>
-                    <PlusCircle className='h-4 w-4' />
-                    Post New Job
-                  </Button>
-                </Link>
-              </div>
               <div className='mt-6 px-3 space-y-1'>
                 {routes.map((route) => (
                   <Link
@@ -210,7 +191,7 @@ export default function ApplicantLayout({ children }: { children: ReactNode }) {
           className='flex items-center gap-2 font-semibold'
         >
           <Building className='h-5 w-5' />
-          <span>Employer Portal</span>
+          <span>Applicant Portal</span>
         </Link>
       </div>
       <main className='flex-1 overflow-auto'>{children}</main>
