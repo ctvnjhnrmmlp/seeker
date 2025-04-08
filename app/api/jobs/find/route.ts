@@ -22,6 +22,20 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
+    if (body.recent === 'true') {
+      const jobs = await Prisma.job.findMany({
+        take: 10,
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      return NextResponse.json(
+        { message: 'Recent jobs fetched successfully.', data: jobs },
+        { status: 200 }
+      );
+    }
+
     const searchParams = new URLSearchParams(body);
 
     const filters: Record<string, any> = {};

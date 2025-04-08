@@ -81,12 +81,10 @@ export default class JobService {
     email: string;
     query: Record<string, string>;
   }): Promise<Job[]> {
-    const params = new URLSearchParams(query).toString();
-
     try {
       const response = await fetch(`${this.endpoint}/find`, {
         method: 'POST',
-        body: JSON.stringify(params),
+        body: JSON.stringify(query),
         headers: {
           'Content-Type': 'application/json',
           'x-user-email': email,
