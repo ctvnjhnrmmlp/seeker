@@ -20,9 +20,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'User not found.' }, { status: 404 });
     }
 
-    const applicationId = await req.json();
+    const { id } = await req.json();
 
-    if (!applicationId) {
+    if (!id) {
       return NextResponse.json(
         { error: 'Missing application id.' },
         { status: 400 }
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
 
     const application = await Prisma.job.findUnique({
       where: {
-        id: applicationId,
+        id,
       },
     });
 
