@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/select';
 import JobService from '@/services/seeker/jobs';
 import { convertToDateFormat } from '@/utilities/functions';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   Clock,
   MoreHorizontal,
@@ -34,9 +34,12 @@ import {
   Trash2,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
-export default function EmployerJobs() {
+export default function EmployerJobs({ email }: { email: string }) {
+  const router = useRouter();
   const statusFilter = 'all';
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
@@ -61,6 +64,22 @@ export default function EmployerJobs() {
       typeFilter === 'all' || normalizeType(job.type) === typeFilter;
 
     return matchesSearch && matchesStatus && matchesType;
+  });
+
+  const deleteJobMutation = useMutation({
+    mutationFn: async ({ email, id }: { email: string; id: string }) =>
+      await JobService.deleteJob({ email, jobId: id }),
+    onSuccess: () => {
+      toast('Job deleted successfully', {
+        description: 'Your job listing has been updated.',
+      });
+      router.push('/users/employers');
+    },
+    onError: () => {
+      toast('Error', {
+        description: 'There was a problem deleting your job.',
+      });
+    },
   });
 
   return (
@@ -153,7 +172,12 @@ export default function EmployerJobs() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align='end'>
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem className='text-red-600'>
+                          <DropdownMenuItem
+                            className='text-red-600'
+                            onClick={() =>
+                              deleteJobMutation.mutate({ email, id: job.id })
+                            }
+                          >
                             <Trash2 className='mr-2 h-4 w-4' />
                             <span>Delete</span>
                           </DropdownMenuItem>
