@@ -51,7 +51,7 @@ export default function EmployerJob({
   const [activeTab, setActiveTab] = useState('view');
   const { data: session } = useSession();
 
-  const { data: jobServer, status: jobServerStatus } = useQuery({
+  const { data: jobServer } = useQuery({
     queryKey: ['getJob'],
     queryFn: async () => await JobService.findJobById({ email, id }),
   });
@@ -74,6 +74,22 @@ export default function EmployerJob({
 
   const formValues = form.watch();
 
+  const deleteJobMutation = useMutation({
+    mutationFn: async ({ email, id }: { email: string; id: string }) =>
+      await JobService.deleteJob({ email, jobId: id }),
+    onSuccess: () => {
+      toast('Job deleted successfully', {
+        description: 'Your job listing has been updated.',
+      });
+      router.push('/users/employers');
+    },
+    onError: () => {
+      toast('Error', {
+        description: 'There was a problem deleting your job.',
+      });
+    },
+  });
+
   const updateJobMutation = useMutation({
     mutationFn: async ({
       email,
@@ -84,17 +100,15 @@ export default function EmployerJob({
       id: string;
       job: z.infer<typeof JobSchema>;
     }) => await JobService.updateJob({ email, jobId: id, updatedJobData: job }),
-
     onSuccess: () => {
-      toast('Job Updated Successfully', {
+      toast('Job updated successfully', {
         description: 'Your job listing has been updated.',
       });
       router.push('/users/employers');
     },
-
     onError: () => {
       toast('Error', {
-        description: 'There was a problem posting your job.',
+        description: 'There was a problem updating your job.',
       });
     },
   });
@@ -115,7 +129,6 @@ export default function EmployerJob({
           <TabsTrigger value='view'>View</TabsTrigger>
           <TabsTrigger value='update'>Update</TabsTrigger>
         </TabsList>
-
         <TabsContent value='view' className='mt-6'>
           <Card>
             <CardHeader>
@@ -183,15 +196,20 @@ export default function EmployerJob({
                 </div>
               </div>
             </CardContent>
-            <CardFooter className='flex justify-between'>
-              <Button variant='outline' onClick={() => setActiveTab('edit')}>
-                Back to Edit
+            <CardFooter className='flex justify-end gap-4'>
+              <Button variant='outline' onClick={() => setActiveTab('update')}>
+                Update
               </Button>
-              <Button onClick={form.handleSubmit(onSubmit)}>Update Job</Button>
+              <Button
+                className='bg-red-700'
+                onClick={() => deleteJobMutation.mutate({ email, id })}
+              >
+                Delete
+              </Button>
+              <Button onClick={form.handleSubmit(onSubmit)}>Update</Button>
             </CardFooter>
           </Card>
         </TabsContent>
-
         <TabsContent value='update' className='mt-6'>
           <Card>
             <CardHeader>
@@ -223,7 +241,6 @@ export default function EmployerJob({
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name='company'
@@ -237,7 +254,6 @@ export default function EmployerJob({
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name='location'
@@ -254,7 +270,6 @@ export default function EmployerJob({
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name='type'
@@ -290,7 +305,6 @@ export default function EmployerJob({
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name='salaryMin'
@@ -307,7 +321,6 @@ export default function EmployerJob({
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name='salaryMax'
@@ -325,7 +338,6 @@ export default function EmployerJob({
                       )}
                     />
                   </div>
-
                   <FormField
                     control={form.control}
                     name='description'
@@ -343,7 +355,6 @@ export default function EmployerJob({
                       </FormItem>
                     )}
                   />
-
                   <FormField
                     control={form.control}
                     name='requirements'
@@ -361,7 +372,6 @@ export default function EmployerJob({
                       </FormItem>
                     )}
                   />
-
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                     <FormField
                       control={form.control}
@@ -382,7 +392,6 @@ export default function EmployerJob({
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name='contactEmail'
@@ -403,16 +412,21 @@ export default function EmployerJob({
                       )}
                     />
                   </div>
-
                   <div className='flex justify-end gap-4'>
                     <Button
                       type='button'
                       variant='outline'
                       onClick={() => setActiveTab('view')}
                     >
-                      Preview
+                      View
                     </Button>
-                    <Button type='submit'>Update Job</Button>
+                    <Button
+                      className='bg-red-700'
+                      onClick={() => deleteJobMutation.mutate({ email, id })}
+                    >
+                      Delete
+                    </Button>
+                    <Button type='submit'>Update</Button>
                   </div>
                 </form>
               </Form>
