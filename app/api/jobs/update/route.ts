@@ -1,7 +1,7 @@
 import { Prisma } from '@/database/database';
 import { NextResponse } from 'next/server';
 
-export async function POST(req: Request) {
+export async function PUT(req: Request) {
   try {
     const email = req.headers.get('x-user-email');
 
@@ -20,25 +20,31 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'User not found.' }, { status: 404 });
     }
 
-    const id = await req.json();
+    const body = await req.json();
 
-    if (!id) {
+    const { id: jobId, data: updatedJobData } = body;
+
+    if (!jobId || !updatedJobData) {
       return NextResponse.json(
-        { error: 'Job ID are required.' },
+        { error: 'Missing job ID or job data.' },
         { status: 400 }
       );
     }
 
     const job = await Prisma.job.findUnique({
-      where: {
-        id: id,
-      },
+      where: { id: jobId },
     });
 
-    return NextResponse.json(
-      { message: 'Job found successfully.', data: job },
-      { status: 201 }
-    );
+    if (!job) {
+      return NextResponse.json({ error: 'Job not found.' }, { status: 404 });
+    }
+
+    const updatedJob = await Prisma.job.update({
+      where: { id: jobId },
+      data: updatedJobData,
+    });
+
+    return NextResponse.json({ data: updatedJob }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error: 'Internal Server Error' },

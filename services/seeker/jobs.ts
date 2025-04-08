@@ -65,7 +65,8 @@ export default class JobService {
       });
 
       if (response.ok) {
-        return await response.json();
+        const data = await response.json();
+        return data.data;
       }
 
       throw new Error();
@@ -99,6 +100,38 @@ export default class JobService {
       throw new Error();
     } catch (error) {
       return [];
+    }
+  }
+
+  static async updateJob({
+    email,
+    jobId,
+    updatedJobData,
+  }: {
+    email: string;
+    jobId: string;
+    updatedJobData: z.infer<typeof JobSchema>;
+  }): Promise<Job | null> {
+    try {
+      const response = await fetch(`${this.endpoint}/update`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          id: jobId,
+          data: updatedJobData,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-email': email,
+        },
+      });
+
+      if (response.ok) {
+        return await response.json();
+      }
+
+      throw new Error();
+    } catch (error) {
+      return null;
     }
   }
 }
