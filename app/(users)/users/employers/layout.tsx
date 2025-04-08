@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useQuery } from '@tanstack/react-query';
 import {
   Briefcase,
   Building,
@@ -31,6 +32,10 @@ import { useState } from 'react';
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
+  // const { } = useQuery({
+  //   queryKey: ['getJobsDashboard']
+  // })
 
   const routes = [
     {
