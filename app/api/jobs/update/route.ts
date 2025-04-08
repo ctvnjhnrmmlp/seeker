@@ -22,9 +22,9 @@ export async function PUT(req: Request) {
 
     const body = await req.json();
 
-    const { id: jobId, data: updatedJobData } = body;
+    const { id, data } = body;
 
-    if (!jobId || !updatedJobData) {
+    if (!id || !data) {
       return NextResponse.json(
         { error: 'Missing job ID or job data.' },
         { status: 400 }
@@ -32,7 +32,7 @@ export async function PUT(req: Request) {
     }
 
     const job = await Prisma.job.findUnique({
-      where: { id: jobId },
+      where: { id },
     });
 
     if (!job) {
@@ -40,18 +40,18 @@ export async function PUT(req: Request) {
     }
 
     const updatedJob = await Prisma.job.update({
-      where: { id: jobId },
+      where: { id },
       data: {
-        title: updatedJobData.title,
-        company: updatedJobData.company,
-        location: updatedJobData.location,
-        type: updatedJobData.type,
-        minimumSalary: Number(updatedJobData.salaryMin),
-        maximumSalary: Number(updatedJobData.salaryMax),
-        description: updatedJobData.description,
-        requirements: updatedJobData.requirements,
-        url: updatedJobData.applicationUrl,
-        email: updatedJobData.contactEmail,
+        title: data.title,
+        company: data.company,
+        location: data.location,
+        type: data.type,
+        minimumSalary: Number(data.salaryMin),
+        maximumSalary: Number(data.salaryMax),
+        description: data.description,
+        requirements: data.requirements,
+        url: data.applicationUrl,
+        email: data.contactEmail,
       },
     });
 

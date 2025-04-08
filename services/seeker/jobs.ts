@@ -134,4 +134,31 @@ export default class JobService {
       return null;
     }
   }
+
+  static async deleteJob({
+    email,
+    jobId,
+  }: {
+    email: string;
+    jobId: string;
+  }): Promise<boolean> {
+    try {
+      const response = await fetch(`${this.endpoint}/delete`, {
+        method: 'DELETE',
+        body: JSON.stringify({ id: jobId }),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-email': email,
+        },
+      });
+
+      if (response.ok) {
+        return true;
+      }
+
+      throw new Error();
+    } catch (error) {
+      return false;
+    }
+  }
 }
