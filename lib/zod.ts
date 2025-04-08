@@ -6,7 +6,7 @@ export const JobSchema = z.object({
     .min(5, { message: 'Job title must be at least 5 characters' }),
   company: z.string().min(2, { message: 'Company name is required' }),
   location: z.string().min(2, { message: 'Location is required' }),
-  jobType: z.string(),
+  type: z.string(),
   salaryMin: z.string(),
   salaryMax: z.string(),
   description: z

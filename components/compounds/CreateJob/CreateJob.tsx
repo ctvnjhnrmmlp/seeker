@@ -51,7 +51,7 @@ export default function Page() {
       title: '',
       company: '',
       location: '',
-      jobType: 'full-time',
+      type: 'full-time',
       salaryMin: '',
       salaryMax: '',
       description: '',
@@ -164,7 +164,7 @@ export default function Page() {
 
                     <FormField
                       control={form.control}
-                      name='jobType'
+                      name='type'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Job Type*</FormLabel>
@@ -354,11 +354,11 @@ export default function Page() {
                         <span>{formValues.location}</span>
                       </div>
                     )}
-                    {formValues.jobType && (
+                    {formValues.type && (
                       <div className='flex items-center gap-1'>
                         <Briefcase className='h-4 w-4' />
                         <span className='capitalize'>
-                          {formValues.jobType.replace('-', ' ')}
+                          {formValues.type.replace('-', ' ')}
                         </span>
                       </div>
                     )}

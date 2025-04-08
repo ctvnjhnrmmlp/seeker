@@ -62,7 +62,7 @@ export default function EmployerJob({
       title: jobServer?.title || '',
       company: jobServer?.company || '',
       location: jobServer?.location || '',
-      jobType: jobServer?.type || 'full-time',
+      type: jobServer?.type || 'full-time',
       salaryMin: jobServer?.minimumSalary.toString() || '',
       salaryMax: jobServer?.maximumSalary.toString() || '',
       description: jobServer?.description || '',
@@ -77,9 +77,11 @@ export default function EmployerJob({
   const updateJobMutation = useMutation({
     mutationFn: async ({
       email,
+      id,
       job,
     }: {
       email: string;
+      id: string;
       job: z.infer<typeof JobSchema>;
     }) => await JobService.updateJob({ email, jobId: id, updatedJobData: job }),
 
@@ -98,7 +100,11 @@ export default function EmployerJob({
   });
 
   async function onSubmit(values: z.infer<typeof JobSchema>) {
-    updateJobMutation.mutateAsync({ email: session?.user.email, job: values });
+    updateJobMutation.mutateAsync({
+      email: session?.user.email,
+      id,
+      job: values,
+    });
   }
 
   return (
@@ -137,11 +143,11 @@ export default function EmployerJob({
                         <span>{formValues.location}</span>
                       </div>
                     )}
-                    {formValues.jobType && (
+                    {formValues.type && (
                       <div className='flex items-center gap-1'>
                         <Briefcase className='h-4 w-4' />
                         <span className='capitalize'>
-                          {formValues.jobType.replace('-', ' ')}
+                          {formValues.type.replace('-', ' ')}
                         </span>
                       </div>
                     )}
@@ -251,7 +257,7 @@ export default function EmployerJob({
 
                     <FormField
                       control={form.control}
-                      name='jobType'
+                      name='type'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Job Type*</FormLabel>

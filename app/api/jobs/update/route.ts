@@ -41,7 +41,18 @@ export async function PUT(req: Request) {
 
     const updatedJob = await Prisma.job.update({
       where: { id: jobId },
-      data: updatedJobData,
+      data: {
+        title: updatedJobData.title,
+        company: updatedJobData.company,
+        location: updatedJobData.location,
+        type: updatedJobData.type,
+        minimumSalary: Number(updatedJobData.salaryMin),
+        maximumSalary: Number(updatedJobData.salaryMax),
+        description: updatedJobData.description,
+        requirements: updatedJobData.requirements,
+        url: updatedJobData.applicationUrl,
+        email: updatedJobData.contactEmail,
+      },
     });
 
     return NextResponse.json({ data: updatedJob }, { status: 200 });
