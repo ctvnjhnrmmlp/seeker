@@ -64,23 +64,23 @@ export default function PostJobPage() {
   const createJobMutation = useMutation({
     mutationFn: async (job: z.infer<typeof JobSchema>) =>
       await JobService.createJob(job),
-  });
 
-  async function onSubmit(values: z.infer<typeof JobSchema>) {
-    try {
-      createJobMutation.mutate(values);
-
+    onSuccess: () => {
       toast('Job Posted Successfully', {
         description: 'Your job listing has been published.',
       });
+      // router.push('/dashboard/jobs');
+    },
 
-      // Redirect to jobs page or dashboard
-      // router.push('/dashboard/jobs')
-    } catch (error) {
+    onError: () => {
       toast('Error', {
         description: 'There was a problem posting your job.',
       });
-    }
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof JobSchema>) {
+    createJobMutation.mutateAsync(values);
   }
 
   return (
