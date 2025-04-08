@@ -13,9 +13,9 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import JobService from '@/services/seeker/jobs';
 import { useQuery } from '@tanstack/react-query';
+import _ from 'lodash';
 import { Briefcase, Clock, FileText, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
-import _ from 'underscore';
 
 export default function EmployerDashboard({ email }: { email: string }) {
   const recentApplications = [
@@ -129,7 +129,9 @@ export default function EmployerDashboard({ email }: { email: string }) {
                     </div>
                     <div className='flex flex-col'>
                       <span className='text-muted-foreground'>Type</span>
-                      <span className='font-medium'>{job.type}</span>
+                      <span className='font-medium'>
+                        {_.capitalize(job.type)}
+                      </span>
                     </div>
                   </div>
                 </CardContent>
@@ -142,7 +144,7 @@ export default function EmployerDashboard({ email }: { email: string }) {
               </Card>
             ))}
           </div>
-          <div className='flex justify-center'>
+          <div className='flex'>
             <Link href='/users/employers/jobs'>
               <Button variant='outline'>View All Jobs</Button>
             </Link>
