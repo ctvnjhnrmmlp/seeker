@@ -164,7 +164,7 @@ export default function EmployerJobs() {
     <div className='flex-1 space-y-6 p-6'>
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
         <h1 className='text-2xl font-bold tracking-tight'>Manage Jobs</h1>
-        <Link href='/post-job'>
+        <Link href='/users/employers/create'>
           <Button className='gap-2'>
             <PlusCircle className='h-4 w-4' />
             Post New Job

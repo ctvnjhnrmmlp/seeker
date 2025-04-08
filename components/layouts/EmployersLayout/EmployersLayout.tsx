@@ -10,8 +10,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import JobService from '@/services/seeker/jobs';
-import { useQuery } from '@tanstack/react-query';
 import {
   Briefcase,
   Building,
@@ -31,30 +29,12 @@ import type React from 'react';
 import { useState } from 'react';
 
 export default function EmployersLayout({
-  email,
   children,
 }: {
-  email: string;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
-
-  const { data: jobsServer, status: jobsServerStatus } = useQuery({
-    queryKey: ['getJobs'],
-    queryFn: async () => await JobService.readJobs(),
-  });
-
-  const { data: jobsRecentServer, status: jobsRecentServerStatus } = useQuery({
-    queryKey: ['getJobsRecent'],
-    queryFn: async () =>
-      await JobService.findJobsByQuery({
-        email: email,
-        query: {
-          recent: 'true',
-        },
-      }),
-  });
 
   const routes = [
     {
@@ -82,10 +62,6 @@ export default function EmployersLayout({
       active: pathname === '/users/employers/candidates',
     },
   ];
-
-  if (jobsServerStatus === 'success') {
-    console.log(jobsServer);
-  }
 
   return (
     <div className='flex min-h-screen bg-background'>
@@ -177,7 +153,7 @@ export default function EmployersLayout({
             <nav className='flex-1 overflow-auto py-4'>
               <div className='px-3'>
                 <Link
-                  href='/post-job'
+                  href='/users/employers/create'
                   onClick={() => setIsMobileNavOpen(false)}
                 >
                   <Button className='w-full justify-start gap-2'>

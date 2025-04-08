@@ -11,70 +11,13 @@ import {
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import JobService from '@/services/seeker/jobs';
+import { useQuery } from '@tanstack/react-query';
 import { Briefcase, Clock, FileText, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
+import _ from 'underscore';
 
-export default function EmployerDashboard() {
-  const stats = [
-    {
-      title: 'Active Jobs',
-      value: '12',
-      icon: Briefcase,
-      change: '+2 this month',
-      trend: 'up',
-    },
-    {
-      title: 'Total Applications',
-      value: '342',
-      icon: FileText,
-      change: '+86 this month',
-      trend: 'up',
-    },
-  ];
-
-  const recentJobs = [
-    {
-      id: '1',
-      title: 'Senior Frontend Developer',
-      location: 'Remote',
-      type: 'Full-time',
-      applications: 24,
-      views: 342,
-      posted: '2 days ago',
-      status: 'active',
-    },
-    {
-      id: '2',
-      title: 'UX Designer',
-      location: 'New York, NY',
-      type: 'Full-time',
-      applications: 18,
-      views: 256,
-      posted: '5 days ago',
-      status: 'active',
-    },
-    {
-      id: '3',
-      title: 'Backend Developer',
-      location: 'San Francisco, CA',
-      type: 'Contract',
-      applications: 12,
-      views: 198,
-      posted: '1 week ago',
-      status: 'active',
-    },
-    {
-      id: '4',
-      title: 'Product Manager',
-      location: 'Remote',
-      type: 'Full-time',
-      applications: 8,
-      views: 145,
-      posted: '2 weeks ago',
-      status: 'active',
-    },
-  ];
-
+export default function EmployerDashboard({ email }: { email: string }) {
   const recentApplications = [
     {
       id: '1',
@@ -110,6 +53,22 @@ export default function EmployerDashboard() {
     },
   ];
 
+  const { data: jobsServer, status: jobsServerStatus } = useQuery({
+    queryKey: ['getJobs'],
+    queryFn: async () => await JobService.readJobs(),
+  });
+
+  const { data: jobsRecentServer, status: jobsRecentServerStatus } = useQuery({
+    queryKey: ['getJobsRecent'],
+    queryFn: async () =>
+      await JobService.findJobsByQuery({
+        email: email,
+        query: {
+          recent: 'true',
+        },
+      }),
+  });
+
   return (
     <div className='flex-1 space-y-6 p-6'>
       <div className='flex items-center justify-between'>
@@ -123,26 +82,26 @@ export default function EmployerDashboard() {
       </div>
 
       <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
-        {stats.map((stat) => (
-          <Card key={stat.title}>
-            <CardHeader className='flex flex-row items-center justify-between pb-2'>
-              <CardTitle className='text-sm font-medium'>
-                {stat.title}
-              </CardTitle>
-              <stat.icon className='h-4 w-4 text-muted-foreground' />
-            </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold'>{stat.value}</div>
-              <p
-                className={`text-xs ${
-                  stat.trend === 'up' ? 'text-green-500' : 'text-red-500'
-                }`}
-              >
-                {stat.change}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
+        <Card>
+          <CardHeader className='flex flex-row items-center justify-between pb-2'>
+            <CardTitle className='text-sm font-medium'>Active Jobs</CardTitle>
+            <Briefcase className='h-4 w-4 text-muted-foreground' />
+          </CardHeader>
+          <CardContent>
+            <div className='text-2xl font-bold'>{jobsServer?.length}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className='flex flex-row items-center justify-between pb-2'>
+            <CardTitle className='text-sm font-medium'>
+              Total Applications
+            </CardTitle>
+            <FileText className='h-4 w-4 text-muted-foreground' />
+          </CardHeader>
+          <CardContent>
+            <div className='text-2xl font-bold'>0</div>
+          </CardContent>
+        </Card>
       </div>
 
       <Tabs defaultValue='jobs' className='space-y-4'>
@@ -152,41 +111,32 @@ export default function EmployerDashboard() {
         </TabsList>
         <TabsContent value='jobs' className='space-y-4'>
           <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-            {recentJobs.map((job) => (
+            {jobsRecentServer?.map((job) => (
               <Card key={job.id}>
                 <CardHeader className='pb-2'>
                   <CardTitle className='text-base'>{job.title}</CardTitle>
                   <CardDescription className='flex items-center gap-1'>
-                    {job.location} • {job.type}
+                    {job.location} • {job.company}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className='pb-2'>
                   <div className='grid grid-cols-2 gap-2 text-sm'>
                     <div className='flex flex-col'>
-                      <span className='text-muted-foreground'>
-                        Applications
+                      <span className='text-muted-foreground'>Salary</span>
+                      <span className='font-medium'>
+                        ${job.minimumSalary} - ${job.maximumSalary}
                       </span>
-                      <span className='font-medium'>{job.applications}</span>
                     </div>
                     <div className='flex flex-col'>
-                      <span className='text-muted-foreground'>Views</span>
-                      <span className='font-medium'>{job.views}</span>
+                      <span className='text-muted-foreground'>Type</span>
+                      <span className='font-medium'>{job.type}</span>
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter className='flex items-center justify-between pt-0'>
                   <div className='flex items-center gap-1 text-xs text-muted-foreground'>
                     <Clock className='h-3 w-3' />
-                    <span>Posted {job.posted}</span>
-                  </div>
-                  <div
-                    className={`text-xs font-medium px-2 py-1 rounded-full ${
-                      job.status === 'active'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-amber-100 text-amber-700'
-                    }`}
-                  >
-                    {job.status === 'active' ? 'Active' : 'Draft'}
+                    <span>Posted</span>
                   </div>
                 </CardFooter>
               </Card>

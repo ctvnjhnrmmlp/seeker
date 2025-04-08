@@ -1,4 +1,3 @@
-import { auth } from '@/auth';
 import EmployersLayout from '@/components/layouts/EmployersLayout/EmployersLayout';
 
 export default async function Layout({
@@ -6,9 +5,5 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-
-  return (
-    <EmployersLayout email={session?.user.email}>{children}</EmployersLayout>
-  );
+  return <EmployersLayout>{children}</EmployersLayout>;
 }
