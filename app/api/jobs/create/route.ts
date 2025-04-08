@@ -1,8 +1,25 @@
 import { Prisma } from '@/database/database';
+import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
     const request = await req.json();
+    const email = req.headers.get('x-user-email') as string;
+
+    const user = await Prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if (!user || !email) {
+      return NextResponse.json(
+        { error: 'Bad Request' },
+        {
+          status: 400,
+        }
+      );
+    }
 
     const {
       title,
@@ -14,7 +31,6 @@ export async function POST(req: Request) {
       description,
       requirements,
       applicationUrl: url,
-      contactEmail: email,
     } = request;
 
     await Prisma.job.create({
@@ -29,8 +45,15 @@ export async function POST(req: Request) {
         requirements,
         url,
         email,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
       },
     });
+
+    console.log(email);
   } catch (error) {
     console.error(error);
   }
