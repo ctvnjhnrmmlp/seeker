@@ -354,9 +354,6 @@ export default function ApplicantJob({
           </div>
           <div className='space-y-6'>
             <Card>
-              <CardHeader>
-                <CardTitle>Apply for this position</CardTitle>
-              </CardHeader>
               <CardContent className='space-y-4'>
                 <Dialog>
                   <DialogTrigger asChild>
@@ -493,7 +490,7 @@ export default function ApplicantJob({
               </CardContent>
               <CardFooter className='flex flex-col items-start gap-2 border-t pt-6'>
                 <p className='text-sm text-muted-foreground'>
-                  You can also apply directly on the company website:
+                  {jobServer?.company}
                 </p>
                 <a
                   href={jobServer?.url}
