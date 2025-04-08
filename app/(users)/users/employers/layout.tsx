@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
-  BarChart3,
   Briefcase,
   Building,
   ChevronDown,
@@ -36,39 +35,27 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const routes = [
     {
       label: 'Dashboard',
-      href: '/dashboard',
+      href: '/users/employers',
       icon: Home,
-      active: pathname === '/dashboard',
+      active: pathname === '/users/employers',
     },
     {
       label: 'Jobs',
-      href: '/dashboard/jobs',
+      href: '/users/employers/jobs',
       icon: Briefcase,
-      active: pathname === '/dashboard/jobs',
+      active: pathname === '/users/employers/jobs',
     },
     {
       label: 'Applications',
-      href: '/dashboard/applications',
+      href: '/users/employers/applications',
       icon: FileText,
-      active: pathname === '/dashboard/applications',
+      active: pathname === '/users/employers/applications',
     },
     {
       label: 'Candidates',
-      href: '/dashboard/candidates',
+      href: '/users/employers/candidates',
       icon: Users,
-      active: pathname === '/dashboard/candidates',
-    },
-    {
-      label: 'Analytics',
-      href: '/dashboard/analytics',
-      icon: BarChart3,
-      active: pathname === '/dashboard/analytics',
-    },
-    {
-      label: 'Settings',
-      href: '/dashboard/settings',
-      icon: Settings,
-      active: pathname === '/dashboard/settings',
+      active: pathname === '/users/employers/candidates',
     },
   ];
 
@@ -115,7 +102,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <DropdownMenuTrigger asChild>
               <Button variant='ghost' className='w-full justify-start gap-2'>
                 <User className='h-4 w-4' />
-                <span>Acme Inc.</span>
+                <span>Seeker</span>
                 <ChevronDown className='ml-auto h-4 w-4' />
               </Button>
             </DropdownMenuTrigger>
@@ -197,7 +184,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     className='w-full justify-start gap-2'
                   >
                     <User className='h-4 w-4' />
-                    <span>Acme Inc.</span>
+                    <span>Seeker</span>
                     <ChevronDown className='ml-auto h-4 w-4' />
                   </Button>
                 </DropdownMenuTrigger>

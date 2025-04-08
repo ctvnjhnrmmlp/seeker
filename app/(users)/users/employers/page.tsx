@@ -24,7 +24,6 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function DashboardPage() {
-  // Mock data for the dashboard
   const stats = [
     {
       title: 'Active Jobs',
@@ -38,20 +37,6 @@ export default function DashboardPage() {
       value: '342',
       icon: FileText,
       change: '+86 this month',
-      trend: 'up',
-    },
-    {
-      title: 'Total Views',
-      value: '2.4k',
-      icon: Eye,
-      change: '+15% from last month',
-      trend: 'up',
-    },
-    {
-      title: 'Candidates Hired',
-      value: '18',
-      icon: Users,
-      change: '+3 this month',
       trend: 'up',
     },
   ];
@@ -217,7 +202,7 @@ export default function DashboardPage() {
             ))}
           </div>
           <div className='flex justify-center'>
-            <Link href='/dashboard/jobs'>
+            <Link href='/users/employers/jobs'>
               <Button variant='outline'>View All Jobs</Button>
             </Link>
           </div>
@@ -272,35 +257,6 @@ export default function DashboardPage() {
           </div>
         </TabsContent>
       </Tabs>
-
-      <div className='grid gap-6 md:grid-cols-2'>
-        <Card>
-          <CardHeader>
-            <CardTitle>Application Sources</CardTitle>
-            <CardDescription>
-              Where your candidates are coming from
-            </CardDescription>
-          </CardHeader>
-          <CardContent className='pl-2'>
-            <div className='aspect-square w-full flex items-center justify-center'>
-              <BarChart3 className='h-16 w-16 text-muted-foreground/50' />
-              <span className='sr-only'>Chart placeholder</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Job Performance</CardTitle>
-            <CardDescription>Views and applications over time</CardDescription>
-          </CardHeader>
-          <CardContent className='pl-2'>
-            <div className='aspect-square w-full flex items-center justify-center'>
-              <BarChart3 className='h-16 w-16 text-muted-foreground/50' />
-              <span className='sr-only'>Chart placeholder</span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }
