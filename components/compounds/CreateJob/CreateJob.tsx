@@ -40,7 +40,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-export default function CreateJob() {
+export default function Page() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('edit');
   const { data: session } = useSession();
@@ -76,7 +76,7 @@ export default function CreateJob() {
       toast('Job Posted Successfully', {
         description: 'Your job listing has been published.',
       });
-      // router.push('/dashboard/jobs');
+      router.push('/users/employers');
     },
 
     onError: () => {

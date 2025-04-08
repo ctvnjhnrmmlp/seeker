@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import CreateJob from '@/components/compounds/CreateJob/CreateJob';
 import { redirect } from 'next/navigation';
 
 export default async function Page() {
@@ -10,7 +11,9 @@ export default async function Page() {
 
   return (
     <main>
-      <section className='flex justify-center w-full'></section>
+      <section className='flex justify-center w-full'>
+        <CreateJob />
+      </section>
     </main>
   );
 }
