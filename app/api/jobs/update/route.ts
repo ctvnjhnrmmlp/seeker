@@ -57,9 +57,6 @@ export async function PUT(req: Request) {
 
     return NextResponse.json({ data: updatedJob }, { status: 200 });
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

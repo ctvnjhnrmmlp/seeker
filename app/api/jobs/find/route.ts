@@ -38,6 +38,7 @@ export async function POST(req: Request) {
 
     const searchParams = new URLSearchParams(body);
 
+    // @ts-expect-error: should be change to proper implementation
     const filters: Record<string, any> = {};
 
     searchParams.forEach((value, key) => {
@@ -58,9 +59,6 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }
