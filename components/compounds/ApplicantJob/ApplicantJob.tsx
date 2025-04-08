@@ -23,6 +23,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import JobService from '@/services/seeker/jobs';
+import { convertToDateFormat } from '@/utilities/functions';
 import { useQuery } from '@tanstack/react-query';
 import {
   ArrowLeft,
@@ -38,7 +39,8 @@ import {
   Share2,
   Upload,
 } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -141,9 +143,14 @@ const JOBS = [
   // Add more detailed job listings as needed
 ];
 
-export default function ApplicantJob({ id }: { id: string }) {
+export default function ApplicantJob({
+  email,
+  id,
+}: {
+  email: string;
+  id: string;
+}) {
   const router = useRouter();
-  const job = JOBS.find((j) => j.id === id);
   const [isSaved, setIsSaved] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
   const [isApplying, setIsApplying] = useState(false);
@@ -155,19 +162,10 @@ export default function ApplicantJob({ id }: { id: string }) {
     coverLetter: '',
   });
 
-  if (!job) {
-    return (
-      <div className='container py-10 text-center'>
-        <h1 className='text-2xl font-bold mb-4'>Job Not Found</h1>
-        <p className='mb-6'>
-          The job listing you're looking for doesn't exist or has been removed.
-        </p>
-        <Button onClick={() => router.push('/careers')}>
-          <ArrowLeft className='mr-2 h-4 w-4' /> Back to Jobs
-        </Button>
-      </div>
-    );
-  }
+  const { data: jobServer } = useQuery({
+    queryKey: ['getJobApplicant'],
+    queryFn: async () => await JobService.findJobById({ email, id }),
+  });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -198,11 +196,11 @@ export default function ApplicantJob({ id }: { id: string }) {
     }, 1500);
   };
 
-  const similarJobs = JOBS.filter(
-    (j) =>
-      j.id !== job.id &&
-      (j.category === job.category || j.experience === job.experience)
-  ).slice(0, 3);
+  // const similarJobs = JOBS.filter(
+  //   (j) =>
+  //     j.id !== job.id &&
+  //     (j.category === job.category || j.experience === job.experience)
+  // ).slice(0, 3);
 
   return (
     <div className='min-h-screen bg-background'>
@@ -224,19 +222,23 @@ export default function ApplicantJob({ id }: { id: string }) {
                       <Building className='h-6 w-6 text-muted-foreground' />
                     </div>
                     <div>
-                      <CardTitle className='text-2xl'>{job.title}</CardTitle>
+                      <CardTitle className='text-2xl'>
+                        {jobServer?.title}
+                      </CardTitle>
                       <CardDescription className='flex items-center mt-1'>
-                        <span className='font-medium'>{job.company}</span>
+                        <span className='font-medium'>
+                          {jobServer?.company}
+                        </span>
                         <span className='mx-2'>•</span>
-                        <span>{job.location}</span>
+                        <span>{jobServer?.location}</span>
                       </CardDescription>
                     </div>
                   </div>
-                  {job.featured && (
+                  {/* {job.featured && (
                     <div className='bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full'>
                       Featured
                     </div>
-                  )}
+                  )} */}
                 </div>
               </CardHeader>
               <CardContent className='pb-6'>
@@ -245,28 +247,33 @@ export default function ApplicantJob({ id }: { id: string }) {
                     <span className='text-muted-foreground'>Job Type</span>
                     <div className='flex items-center gap-1 font-medium'>
                       <Briefcase className='h-4 w-4' />
-                      <span>{job.type}</span>
+                      <span>{jobServer?.type}</span>
                     </div>
                   </div>
                   <div className='flex flex-col gap-1'>
                     <span className='text-muted-foreground'>Salary</span>
                     <div className='flex items-center gap-1 font-medium'>
                       <DollarSign className='h-4 w-4' />
-                      <span>{job.salary}</span>
+                      <span>
+                        ${jobServer?.minimumSalary} - $
+                        {jobServer?.maximumSalary}
+                      </span>
                     </div>
                   </div>
-                  <div className='flex flex-col gap-1'>
+                  {/* <div className='flex flex-col gap-1'>
                     <span className='text-muted-foreground'>Experience</span>
                     <div className='flex items-center gap-1 font-medium'>
                       <FileText className='h-4 w-4' />
                       <span>{job.experience}</span>
                     </div>
-                  </div>
+                  </div> */}
                   <div className='flex flex-col gap-1'>
                     <span className='text-muted-foreground'>Posted</span>
                     <div className='flex items-center gap-1 font-medium'>
                       <Clock className='h-4 w-4' />
-                      <span>{job.posted}</span>
+                      <span>
+                        {convertToDateFormat(jobServer?.createdAt.toString()!)}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -279,30 +286,19 @@ export default function ApplicantJob({ id }: { id: string }) {
                   <TabsContent value='description' className='space-y-6 pt-4'>
                     <div>
                       <h3 className='font-semibold text-lg mb-3'>
-                        Job Description
+                        Description
                       </h3>
-                      <p className='text-muted-foreground'>{job.description}</p>
-                    </div>
-
-                    <div>
-                      <h3 className='font-semibold text-lg mb-3'>
-                        Responsibilities
-                      </h3>
-                      <ul className='list-disc pl-5 space-y-1 text-muted-foreground'>
-                        {job.responsibilities.map((item, index) => (
-                          <li key={index}>{item}</li>
-                        ))}
-                      </ul>
+                      <p className='text-muted-foreground'>
+                        {jobServer?.description}
+                      </p>
                     </div>
                     <div>
                       <h3 className='font-semibold text-lg mb-3'>
-                        Qualifications
+                        Requirements
                       </h3>
-                      <ul className='list-disc pl-5 space-y-1 text-muted-foreground'>
-                        {job.qualifications.map((item, index) => (
-                          <li key={index}>{item}</li>
-                        ))}
-                      </ul>
+                      <p className='text-muted-foreground'>
+                        {jobServer?.requirements}
+                      </p>
                     </div>
                   </TabsContent>
                   <TabsContent value='company' className='space-y-6 pt-4'>
@@ -311,13 +307,15 @@ export default function ApplicantJob({ id }: { id: string }) {
                         <Building className='h-8 w-8 text-muted-foreground' />
                       </div>
                       <div>
-                        <h3 className='font-semibold text-lg'>{job.company}</h3>
-                        <p className='text-muted-foreground'>
+                        <h3 className='font-semibold text-lg'>
+                          {jobServer?.company}
+                        </h3>
+                        {/* <p className='text-muted-foreground'>
                           {job.companyIndustry}
-                        </p>
+                        </p> */}
                       </div>
                     </div>
-                    <p className='text-muted-foreground'>
+                    {/* <p className='text-muted-foreground'>
                       {job.companyDescription}
                     </p>
                     <div className='grid grid-cols-2 gap-4 text-sm'>
@@ -345,9 +343,9 @@ export default function ApplicantJob({ id }: { id: string }) {
                           <ExternalLink className='ml-1 h-3 w-3' />
                         </a>
                       </div>
-                    </div>
+                    </div> */}
                   </TabsContent>
-                  <TabsContent value='benefits' className='space-y-6 pt-4'>
+                  {/* <TabsContent value='benefits' className='space-y-6 pt-4'>
                     <h3 className='font-semibold text-lg mb-3'>
                       Benefits & Perks
                     </h3>
@@ -361,7 +359,7 @@ export default function ApplicantJob({ id }: { id: string }) {
                         </div>
                       ))}
                     </div>
-                  </TabsContent>
+                  </TabsContent> */}
                 </Tabs>
               </CardContent>
             </Card>
@@ -380,10 +378,10 @@ export default function ApplicantJob({ id }: { id: string }) {
                   </DialogTrigger>
                   <DialogContent className='sm:max-w-[500px]'>
                     <DialogHeader>
-                      <DialogTitle>Apply for {job.title}</DialogTitle>
+                      <DialogTitle>Apply for {jobServer?.title}</DialogTitle>
                       <DialogDescription>
                         Complete the form below to submit your application to{' '}
-                        {job.company}.
+                        {jobServer?.company}.
                       </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleSubmitApplication}>
@@ -510,12 +508,12 @@ export default function ApplicantJob({ id }: { id: string }) {
                   You can also apply directly on the company website:
                 </p>
                 <a
-                  href={job.applicationUrl}
+                  href={jobServer?.url}
                   target='_blank'
                   rel='noopener noreferrer'
                   className='text-sm text-primary hover:underline flex items-center'
                 >
-                  {job.applicationUrl.replace('https://', '')}
+                  {jobServer?.url.replace('https://', '')}
                   <ExternalLink className='ml-1 h-3 w-3' />
                 </a>
               </CardFooter>
@@ -528,10 +526,10 @@ export default function ApplicantJob({ id }: { id: string }) {
                 <div className='flex flex-col gap-1'>
                   <span className='text-sm font-medium'>Email:</span>
                   <a
-                    href={`mailto:${job.contactEmail}`}
+                    href={`mailto:${jobServer?.email}`}
                     className='text-sm text-primary hover:underline'
                   >
-                    {job.contactEmail}
+                    {jobServer?.email}
                   </a>
                 </div>
                 <div className='flex flex-col gap-1'>
@@ -550,7 +548,7 @@ export default function ApplicantJob({ id }: { id: string }) {
                 <CardTitle>Similar Jobs</CardTitle>
               </CardHeader>
               <CardContent className='space-y-4'>
-                {similarJobs.map((similarJob) => (
+                {/* {similarJobs.map((similarJob) => (
                   <div
                     key={similarJob.id}
                     className='border-b pb-4 last:border-0 last:pb-0'
@@ -566,11 +564,11 @@ export default function ApplicantJob({ id }: { id: string }) {
                       <span>{similarJob.location}</span>
                     </div>
                   </div>
-                ))}
+                ))} */}
               </CardContent>
               <CardFooter>
                 <Button variant='outline' className='w-full' asChild>
-                  <a href='/careers'>View All Jobs</a>
+                  <Link href='/users/applicants/jobs'>View All Jobs</Link>
                 </Button>
               </CardFooter>
             </Card>

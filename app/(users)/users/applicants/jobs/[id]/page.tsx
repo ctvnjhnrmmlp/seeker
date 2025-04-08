@@ -15,7 +15,7 @@ export default async function Page({
 
   return (
     <>
-      <ApplicantJob id={(await params).id} />
+      <ApplicantJob email={session.user.email} id={(await params).id} />
     </>
   );
 }

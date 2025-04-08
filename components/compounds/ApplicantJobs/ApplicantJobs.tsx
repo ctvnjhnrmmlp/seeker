@@ -85,7 +85,6 @@ export default function ApplicantJobs() {
       job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
       job.description.toLowerCase().includes(searchQuery.toLowerCase());
-
     const matchesLocation =
       locationFilter === 'all' || job.location === locationFilter;
     const matchesType = typeFilter === 'all' || job.type === typeFilter;
@@ -114,8 +113,11 @@ export default function ApplicantJobs() {
   });
 
   const indexOfLastJob = currentPage * jobsPerPage;
+
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+
   const currentJobs = sortedJobs.slice(indexOfFirstJob, indexOfLastJob);
+
   const totalPages = Math.ceil(sortedJobs.length / jobsPerPage);
 
   const paginate = (pageNumber: number) => {
