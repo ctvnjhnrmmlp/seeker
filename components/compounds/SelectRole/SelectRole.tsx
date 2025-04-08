@@ -20,7 +20,7 @@ export default function SelectRole() {
   };
 
   return (
-    <div className='w-full max-w-4xl mx-auto py-12 px-4'>
+    <div className='container max-w-4xl py-12 px-4'>
       <h1 className='text-3xl font-bold text-center mb-3'>Join Our Platform</h1>
       <p className='text-center text-muted-foreground mb-10'>
         Select how you want to use our platform

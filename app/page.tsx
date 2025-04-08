@@ -11,7 +11,7 @@ export default async function UserTypeSelection() {
 
   return (
     <main>
-      <section>
+      <section className='flex justify-center w-full'>
         <SelectRole />
       </section>
     </main>

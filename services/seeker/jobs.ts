@@ -5,14 +5,17 @@ import { z } from 'zod';
 export default class JobService {
   static endpoint = `${process.env.BASE_URL}/api/jobs`;
 
-  static async createJob(
-    email: string,
-    values: z.infer<typeof JobSchema>
-  ): Promise<Job | null> {
+  static async createJob({
+    email,
+    job,
+  }: {
+    email: string;
+    job: z.infer<typeof JobSchema>;
+  }): Promise<Job | null> {
     try {
       const response = await fetch(`${this.endpoint}/create`, {
         method: 'POST',
-        body: JSON.stringify(values),
+        body: JSON.stringify(job),
         headers: {
           'Content-Type': 'application/json',
           'X-User-Email': email,
