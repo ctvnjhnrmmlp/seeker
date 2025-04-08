@@ -19,47 +19,49 @@ import {
   LogOut,
   Menu,
   PlusCircle,
+  Search,
   Settings,
   User,
   Users,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type React from 'react';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
-export default function EmployersLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ApplicantLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   const routes = [
     {
       label: 'Dashboard',
-      href: '/users/employers',
+      href: '/users/applicants',
       icon: Home,
-      active: pathname === '/users/employers',
-    },
-    {
-      label: 'Jobs',
-      href: '/users/employers/jobs',
-      icon: Briefcase,
-      active: pathname === '/users/employers/jobs',
+      active: pathname === '/users/applicants',
     },
     {
       label: 'Applications',
-      href: '/users/employers/applications',
+      href: '/users/applicants/applications',
+      icon: Briefcase,
+      active: pathname === '/users/applicants/applications',
+    },
+    {
+      label: 'Saves',
+      href: '/users/applicants/saves',
       icon: FileText,
-      active: pathname === '/users/employers/applications',
+      active: pathname === '/users/applicants/saves',
     },
     {
       label: 'Candidates',
       href: '/users/employers/candidates',
       icon: Users,
       active: pathname === '/users/employers/candidates',
+    },
+    {
+      label: 'Search',
+      href: '/users/applicants/jobs',
+      icon: Search,
+      active: pathname === '/users/applicants/jobs',
     },
   ];
 
@@ -68,22 +70,14 @@ export default function EmployersLayout({
       <aside className='hidden md:flex w-64 flex-col border-r bg-background'>
         <div className='flex h-14 items-center border-b px-4'>
           <Link
-            href='/users/employers'
+            href='/users/applicants'
             className='flex items-center gap-2 font-semibold'
           >
             <Building className='h-5 w-5' />
-            <span>Employer Portal</span>
+            <span>Applicant Portal</span>
           </Link>
         </div>
         <nav className='flex-1 overflow-auto py-4'>
-          <div className='px-3'>
-            <Link href='/users/employers/create'>
-              <Button className='w-full justify-start gap-2'>
-                <PlusCircle className='h-4 w-4' />
-                Post New Job
-              </Button>
-            </Link>
-          </div>
           <div className='mt-6 px-3 space-y-1'>
             {routes.map((route) => (
               <Link
