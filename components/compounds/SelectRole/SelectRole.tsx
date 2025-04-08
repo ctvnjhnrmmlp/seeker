@@ -7,7 +7,7 @@ import { ArrowRight, Briefcase, Check, UserRound } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-type UserType = 'employer' | 'applicant' | null;
+type UserType = 'employers' | 'applicants' | null;
 
 export default function SelectRole() {
   const [selectedType, setSelectedType] = useState<UserType>(null);
@@ -15,7 +15,7 @@ export default function SelectRole() {
 
   const handleContinue = () => {
     if (selectedType) {
-      router.push(`/users/${selectedType === 'employer' ? 'employers/' : ''}`);
+      router.push(`/users/${selectedType}`);
     }
   };
 
@@ -29,11 +29,11 @@ export default function SelectRole() {
         <Card
           className={cn(
             'cursor-pointer transition-all hover:shadow-md border-2',
-            selectedType === 'employer'
+            selectedType === 'employers'
               ? 'border-primary shadow-md'
               : 'border-muted'
           )}
-          onClick={() => setSelectedType('employer')}
+          onClick={() => setSelectedType('employers')}
         >
           <CardHeader className='pb-4'>
             <div className='flex justify-between items-start'>
@@ -43,7 +43,7 @@ export default function SelectRole() {
                 </div>
                 <CardTitle className='text-2xl'>Employer</CardTitle>
               </div>
-              {selectedType === 'employer' && (
+              {selectedType === 'employers' && (
                 <div className='rounded-full bg-primary p-1'>
                   <Check className='h-5 w-5 text-primary-foreground' />
                 </div>
@@ -74,11 +74,11 @@ export default function SelectRole() {
         <Card
           className={cn(
             'cursor-pointer transition-all hover:shadow-md border-2',
-            selectedType === 'applicant'
+            selectedType === 'applicants'
               ? 'border-primary shadow-md'
               : 'border-muted'
           )}
-          onClick={() => setSelectedType('applicant')}
+          onClick={() => setSelectedType('applicants')}
         >
           <CardHeader className='pb-4'>
             <div className='flex justify-between items-start'>
@@ -88,7 +88,7 @@ export default function SelectRole() {
                 </div>
                 <CardTitle className='text-2xl'>Applicant</CardTitle>
               </div>
-              {selectedType === 'applicant' && (
+              {selectedType === 'applicants' && (
                 <div className='rounded-full bg-primary p-1'>
                   <Check className='h-5 w-5 text-primary-foreground' />
                 </div>
