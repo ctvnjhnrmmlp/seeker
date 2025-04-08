@@ -12,6 +12,7 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import JobService from '@/services/seeker/jobs';
+import { convertToDateFormat } from '@/utilities/functions';
 import { useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
 import { Briefcase, Clock, FileText, PlusCircle } from 'lucide-react';
@@ -138,7 +139,7 @@ export default function EmployerDashboard({ email }: { email: string }) {
                 <CardFooter className='flex items-center justify-between pt-0'>
                   <div className='flex items-center gap-1 text-xs text-muted-foreground'>
                     <Clock className='h-3 w-3' />
-                    <span>Posted</span>
+                    <span>{convertToDateFormat(job.createdAt.toString())}</span>
                   </div>
                 </CardFooter>
               </Card>
