@@ -31,4 +31,19 @@ export default class JobService {
       return null;
     }
   }
+
+  static async readJobs(): Promise<Job[]> {
+    try {
+      const response = await fetch(`${this.endpoint}/all`);
+
+      if (response.ok) {
+        const data = await response.json();
+        return data.data;
+      }
+
+      throw new Error();
+    } catch (error) {
+      return [];
+    }
+  }
 }
