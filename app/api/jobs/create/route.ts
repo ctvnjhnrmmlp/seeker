@@ -5,7 +5,7 @@ type JobRequestBody = {
   title: string;
   company: string;
   location: string;
-  jobType: string;
+  type: string;
   salaryMin: string | number;
   salaryMax: string | number;
   description: string;
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       title,
       company,
       location,
-      jobType,
+      type,
       salaryMin,
       salaryMax,
       description,
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
       !title ||
       !company ||
       !location ||
-      !jobType ||
+      !type ||
       !salaryMin ||
       !salaryMax ||
       !description ||
@@ -68,7 +68,7 @@ export async function POST(req: Request) {
         title,
         company,
         location,
-        type: jobType,
+        type,
         minimumSalary: Number(salaryMin),
         maximumSalary: Number(salaryMax),
         description,
