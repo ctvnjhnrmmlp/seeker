@@ -6,7 +6,7 @@ export async function GET() {
     const jobs = await Prisma.job.findMany();
 
     return NextResponse.json(
-      { message: 'Jobs returned successfully.', jobs },
+      { message: 'Jobs returned successfully.', data: jobs },
       { status: 200 }
     );
   } catch (error) {
