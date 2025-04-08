@@ -3,7 +3,7 @@ import { Job } from '@prisma/client';
 import { z } from 'zod';
 
 export default class JobService {
-  static endpoint = `${process.env.BASE_URL}/api/jobs`;
+  static endpoint = `${process.env.NEXT_PUBLIC_BASE_URL}/api/jobs`;
 
   static async createJob({
     email,
@@ -13,6 +13,8 @@ export default class JobService {
     job: z.infer<typeof JobSchema>;
   }): Promise<Job | null> {
     try {
+      console.log(email);
+
       const response = await fetch(`${this.endpoint}/create`, {
         method: 'POST',
         body: JSON.stringify(job),
