@@ -46,9 +46,13 @@ export default function ApplicantApplication({
     },
   });
 
+  console.log(applicationServer);
+
   return (
     <div className='container max-w-4xl py-10'>
-      <h1 className='text-3xl font-bold mb-6'>{applicationServer?.title}</h1>
+      <h1 className='text-3xl font-bold mb-6'>
+        {applicationServer?.job.title}
+      </h1>
       <div className='w-full'>
         <div className='grid w-full '>
           <Card>
@@ -62,40 +66,40 @@ export default function ApplicantApplication({
               <div className='space-y-6'>
                 <div>
                   <h2 className='text-2xl font-bold'>
-                    {applicationServer?.title || 'Job Title'}
+                    {applicationServer?.job.title || 'Job Title'}
                   </h2>
                   <div className='flex flex-wrap gap-4 mt-2 text-sm text-muted-foreground'>
-                    {applicationServer?.company && (
+                    {applicationServer?.job.company && (
                       <div className='flex items-center gap-1'>
                         <Building className='h-4 w-4' />
-                        <span>{applicationServer?.company}</span>
+                        <span>{applicationServer?.job.company}</span>
                       </div>
                     )}
-                    {applicationServer?.location && (
+                    {applicationServer?.job.location && (
                       <div className='flex items-center gap-1'>
                         <MapPin className='h-4 w-4' />
-                        <span>{applicationServer?.location}</span>
+                        <span>{applicationServer?.job.location}</span>
                       </div>
                     )}
-                    {applicationServer?.type && (
+                    {applicationServer?.job.type && (
                       <div className='flex items-center gap-1'>
                         <Briefcase className='h-4 w-4' />
                         <span className='capitalize'>
-                          {applicationServer?.type.replace('-', ' ')}
+                          {applicationServer?.job.type.replace('-', ' ')}
                         </span>
                       </div>
                     )}
-                    {(applicationServer?.minimumSalary ||
-                      applicationServer?.maximumSalary) && (
+                    {(applicationServer?.job.minimumSalary ||
+                      applicationServer?.job.maximumSalary) && (
                       <div className='flex items-center gap-1'>
                         <DollarSign className='h-4 w-4' />
                         <span>
-                          {applicationServer?.minimumSalary &&
-                          applicationServer?.maximumSalary
-                            ? `$${applicationServer?.minimumSalary} - $${applicationServer?.maximumSalary}`
-                            : applicationServer?.minimumSalary
-                            ? `From $${applicationServer?.minimumSalary}`
-                            : `Up to $${applicationServer?.maximumSalary}`}
+                          {applicationServer?.job.minimumSalary &&
+                          applicationServer?.job.maximumSalary
+                            ? `$${applicationServer?.job.minimumSalary} - $${applicationServer?.job.maximumSalary}`
+                            : applicationServer?.job.minimumSalary
+                            ? `From $${applicationServer?.job.minimumSalary}`
+                            : `Up to $${applicationServer?.job.maximumSalary}`}
                         </span>
                       </div>
                     )}
@@ -107,14 +111,14 @@ export default function ApplicantApplication({
                       Job Description
                     </h3>
                     <div className='whitespace-pre-line'>
-                      {applicationServer?.description ||
+                      {applicationServer?.job.description ||
                         'No description provided.'}
                     </div>
                   </div>
                   <div>
                     <h3 className='text-lg font-semibold mb-2'>Requirements</h3>
                     <div className='whitespace-pre-line'>
-                      {applicationServer?.requirements ||
+                      {applicationServer?.job.requirements ||
                         'No requirements specified.'}
                     </div>
                   </div>

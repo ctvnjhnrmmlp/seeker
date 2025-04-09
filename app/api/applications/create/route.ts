@@ -57,6 +57,10 @@ export async function POST(req: Request) {
         userId,
         jobId,
       },
+      include: {
+        job: true,
+        user: true,
+      },
     });
 
     return NextResponse.json(

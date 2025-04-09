@@ -40,8 +40,19 @@ export async function DELETE(req: Request) {
       );
     }
 
+    if (application.userId !== user.id) {
+      return NextResponse.json(
+        { error: 'You are not authorized to delete.' },
+        { status: 403 }
+      );
+    }
+
     const deletedApplication = await Prisma.application.delete({
       where: { id },
+      include: {
+        job: true,
+        user: true,
+      },
     });
 
     return NextResponse.json(

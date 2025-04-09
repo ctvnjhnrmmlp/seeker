@@ -158,7 +158,7 @@ export default function ApplicantApplications({
               {filteredApplications.map((application) => (
                 <Link
                   key={application.job.id}
-                  href={`/users/applicants/applications/${application.job.id}`}
+                  href={`/users/applicants/applications/${application.id}`}
                 >
                   <div className='grid grid-cols-12 gap-2 p-4 text-sm items-center hover:bg-muted/50'>
                     <div className='col-span-4 font-medium'>

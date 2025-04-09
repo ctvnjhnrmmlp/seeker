@@ -29,9 +29,13 @@ export async function POST(req: Request) {
       );
     }
 
-    const application = await Prisma.job.findUnique({
+    const application = await Prisma.application.findUnique({
       where: {
         id,
+      },
+      include: {
+        job: true,
+        user: true,
       },
     });
 

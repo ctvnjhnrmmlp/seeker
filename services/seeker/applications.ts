@@ -1,4 +1,9 @@
-import { Application, Job } from '@prisma/client';
+import { Application, Job, User } from '@prisma/client';
+
+interface ApplicationIncluded extends Application {
+  job: Job;
+  user: User;
+}
 
 export default class ApplicationService {
   static endpoint = `${process.env.NEXT_PUBLIC_BASE_URL}/api/applications`;
@@ -11,7 +16,7 @@ export default class ApplicationService {
     email: string;
     userId: string;
     jobId: string;
-  }): Promise<Application | null> {
+  }): Promise<ApplicationIncluded | null> {
     try {
       const response = await fetch(`${this.endpoint}/create`, {
         method: 'POST',
@@ -38,7 +43,7 @@ export default class ApplicationService {
   }: {
     email: string;
     id: string;
-  }): Promise<Job | null> {
+  }): Promise<ApplicationIncluded | null> {
     try {
       const response = await fetch(`${this.endpoint}/find/id`, {
         method: 'POST',
@@ -66,7 +71,7 @@ export default class ApplicationService {
   }: {
     email: string;
     query: Record<string, string>;
-  }): Promise<Application[]> {
+  }): Promise<ApplicationIncluded[]> {
     try {
       const response = await fetch(`${this.endpoint}/find`, {
         method: 'POST',
@@ -94,7 +99,7 @@ export default class ApplicationService {
   }: {
     email: string;
     id: string;
-  }): Promise<Application | null> {
+  }): Promise<ApplicationIncluded | null> {
     try {
       const response = await fetch(`${this.endpoint}/delete`, {
         method: 'DELETE',

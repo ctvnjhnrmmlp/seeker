@@ -80,7 +80,7 @@ export default function ApplicantDashboard({
             {applicationsServer?.map((application) => (
               <Link
                 key={application.id}
-                href={`/users/applicants/applications/${application.jobId}`}
+                href={`/users/applicants/applications/${application.id}`}
               >
                 <Card className='h-full'>
                   <CardHeader className='pb-2'>
