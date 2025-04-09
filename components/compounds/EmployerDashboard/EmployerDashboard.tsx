@@ -25,7 +25,7 @@ export default function EmployerDashboard({
   id: string;
 }) {
   const { data: jobsServer } = useQuery({
-    queryKey: ['getJobs'],
+    queryKey: ['getJobsEmployerDashboard'],
     queryFn: async () =>
       await JobService.findJobsByQuery({
         email,
@@ -36,13 +36,21 @@ export default function EmployerDashboard({
   });
 
   const { data: jobsRecentServer } = useQuery({
-    queryKey: ['getJobsRecent'],
+    queryKey: ['getJobsRecentEmployerDashboard'],
     queryFn: async () =>
       await JobService.findJobsByQuery({
         email: email,
         query: {
           recent: 'true',
         },
+      }),
+  });
+
+  const { data: applicantCountServer } = useQuery({
+    queryKey: ['getApplicationsEmployerDashboard'],
+    queryFn: async () =>
+      await JobService.findJobApplicantCount({
+        email,
       }),
   });
 
@@ -75,7 +83,9 @@ export default function EmployerDashboard({
             <FileText className='h-4 w-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>0</div>
+            <div className='text-2xl font-bold'>
+              {applicantCountServer?.length}
+            </div>
           </CardContent>
         </Card>
       </div>

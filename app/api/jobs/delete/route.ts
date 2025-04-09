@@ -41,6 +41,9 @@ export async function DELETE(req: Request) {
 
     const deletedJob = await Prisma.job.delete({
       where: { id },
+      include: {
+        application: true,
+      },
     });
 
     return NextResponse.json({ data: deletedJob }, { status: 200 });
