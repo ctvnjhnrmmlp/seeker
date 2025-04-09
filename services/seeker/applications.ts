@@ -59,6 +59,33 @@ export default class ApplicationService {
     }
   }
 
+  static async findApplicationsByQuery({
+    email,
+    query,
+  }: {
+    email: string;
+    query: Record<string, string>;
+  }): Promise<Application[]> {
+    try {
+      const response = await fetch(`${this.endpoint}/find`, {
+        method: 'POST',
+        body: JSON.stringify(query),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-email': email,
+        },
+      });
+
+      if (response.ok) {
+        return await response.json();
+      }
+
+      throw new Error();
+    } catch (error) {
+      return [];
+    }
+  }
+
   static async deleteApplication({
     email,
     id,

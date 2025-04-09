@@ -51,6 +51,10 @@ export async function POST(req: Request) {
       where: {
         ...filters,
       },
+      include: {
+        job: true,
+        user: true,
+      },
     });
 
     return NextResponse.json(
