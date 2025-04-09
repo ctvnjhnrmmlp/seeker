@@ -166,7 +166,9 @@ export default function EmployerApplicants({ email }: { email: string }) {
                       >
                         {applicant.resumeUrl ?? 'N/A'}{' '}
                       </Link>
-                      <ExternalLink className='h-3 w-3' />
+                      {applicant.resumeUrl && (
+                        <ExternalLink className='h-3 w-3' />
+                      )}
                     </div>
                     <div className='col-span-1 flex space-x-2 items-center text-muted-foreground'>
                       <Link
