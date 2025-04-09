@@ -158,6 +158,7 @@ export default function EmployerDashboard({
           <div className='rounded-md border'>
             <div className='grid grid-cols-12 gap-2 p-4 text-sm font-medium border-b'>
               <div className='col-span-2'>Candidate</div>
+              <div className='col-span-2'>Email</div>
               <div className='col-span-2'>Position</div>
               <div className='col-span-2'>Company</div>
               <div className='col-span-2'>Location</div>
@@ -168,8 +169,11 @@ export default function EmployerDashboard({
                 key={application.job.id}
                 className='grid grid-cols-12 gap-2 p-4 text-sm items-center hover:bg-muted/50'
               >
-                <div className='col-span-2 font-medium'>
+                <div className='col-span-2 text-muted-foreground'>
                   {application.job.user.name}
+                </div>
+                <div className='col-span-2 text-muted-foreground'>
+                  {application.job.user.email}
                 </div>
                 <div className='col-span-2 text-muted-foreground'>
                   {application.job.title}

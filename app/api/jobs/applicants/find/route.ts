@@ -35,6 +35,7 @@ export async function POST(req: Request) {
         url: true,
         email: true,
         application: true,
+        createdAt: true,
         user: true,
       },
     });
