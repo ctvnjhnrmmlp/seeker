@@ -9,13 +9,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import JobService from '@/services/seeker/jobs';
 import { convertToDateFormat } from '@/utilities/functions';
 import { useQuery } from '@tanstack/react-query';
@@ -25,9 +18,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 export default function EmployerCandidates({ email }: { email: string }) {
-  const statusFilter = 'all';
   const [searchQuery, setSearchQuery] = useState('');
-  const [typeFilter, setTypeFilter] = useState('all');
 
   const { data: applicantionsServer = [] } = useQuery({
     queryKey: ['getApplicationsEmployerApplicants'],
@@ -38,9 +29,6 @@ export default function EmployerCandidates({ email }: { email: string }) {
       }),
   });
 
-  const normalizeType = (type: string) =>
-    type.toLowerCase().replace(/[-\s]/g, '');
-
   const filteredApplicantions = applicantionsServer.filter((application) => {
     const matchesSearch =
       application?.job?.user?.name
@@ -50,14 +38,7 @@ export default function EmployerCandidates({ email }: { email: string }) {
         ?.toLowerCase()
         .includes(searchQuery.toLowerCase());
 
-    const matchesStatus =
-      statusFilter === 'all' || application.job.type === statusFilter;
-
-    const matchesType =
-      typeFilter === 'all' ||
-      normalizeType(application.job.type) === typeFilter;
-
-    return matchesSearch && matchesStatus && matchesType;
+    return matchesSearch;
   });
 
   return (
