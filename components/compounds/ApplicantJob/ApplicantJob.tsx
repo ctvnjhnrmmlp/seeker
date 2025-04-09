@@ -19,7 +19,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { UploadButton } from '@/lib/uploadthing';
 import ApplicationService from '@/services/seeker/applications';
 import JobService from '@/services/seeker/jobs';
@@ -52,7 +51,6 @@ export default function ApplicantJob({
   jobId: string;
 }) {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState('description');
   const [isApplying, setIsApplying] = useState(false);
   const [resumeUploaded, setResumeUploaded] = useState(false);
   const resumeUrlRef = useRef<{
@@ -213,12 +211,15 @@ export default function ApplicantJob({
                             config={{ cn: twMerge }}
                             endpoint='fileUploader'
                             appearance={{
-                              button: 'w-full bg-black text-white rounded-md',
-                              allowedContent: 'display-none',
+                              button: 'w-full bg-black rounded-md',
+                              allowedContent:
+                                'text-muted-foreground text-[0.65rem]',
                               container: 'w-full',
                             }}
                             content={{
-                              allowedContent: 'PDF, DOC, DOCX (Max 4MB)',
+                              button: 'Upload',
+                              allowedContent:
+                                '.pdf, .doc, .docx (max 4MB) Tip: Click the button during upload to cancel.',
                             }}
                             onUploadBegin={() => {
                               setResumeUploaded(false);
