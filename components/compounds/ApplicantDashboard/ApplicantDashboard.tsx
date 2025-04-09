@@ -14,7 +14,7 @@ import ApplicationService from '@/services/seeker/applications';
 import { convertToDateFormat } from '@/utilities/functions';
 import { useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
-import { Bookmark, Briefcase, Clock, Search } from 'lucide-react';
+import { Briefcase, Clock, Search } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ApplicantDashboard({
@@ -58,15 +58,6 @@ export default function ApplicantDashboard({
             <div className='text-2xl font-bold'>
               {applicationsServer?.length}
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between pb-2'>
-            <CardTitle className='text-sm font-medium'>Saved Jobs</CardTitle>
-            <Bookmark className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>0</div>
           </CardContent>
         </Card>
       </div>

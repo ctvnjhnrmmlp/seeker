@@ -25,7 +25,6 @@ import JobService from '@/services/seeker/jobs';
 import { convertToDateFormat } from '@/utilities/functions';
 import { useQuery } from '@tanstack/react-query';
 import {
-  BookmarkIcon,
   Briefcase,
   Building,
   ChevronLeft,
@@ -46,7 +45,6 @@ export default function ApplicantJobs() {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [experienceFilter, setExperienceFilter] = useState('all');
   const [sortBy, setSortBy] = useState('relevance');
-  const [savedJobs, setSavedJobs] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
   const jobsPerPage = 10;
@@ -123,14 +121,6 @@ export default function ApplicantJobs() {
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const toggleSaveJob = (jobId: string) => {
-    setSavedJobs((prev) =>
-      prev.includes(jobId)
-        ? prev.filter((id) => id !== jobId)
-        : [...prev, jobId]
-    );
   };
 
   const clearAllFilters = () => {
@@ -539,21 +529,6 @@ export default function ApplicantJobs() {
                               Apply Now
                             </Link>
                           </Button>
-                          <Button
-                            variant='outline'
-                            size='icon'
-                            className='h-9 w-9'
-                            onClick={() => toggleSaveJob(job.id)}
-                          >
-                            <BookmarkIcon
-                              className={`h-4 w-4 ${
-                                savedJobs.includes(job.id)
-                                  ? 'fill-primary text-primary'
-                                  : ''
-                              }`}
-                            />
-                            <span className='sr-only'>Save job</span>
-                          </Button>
                         </div>
                       </div>
                     </CardContent>
@@ -652,198 +627,3 @@ export default function ApplicantJobs() {
     </div>
   );
 }
-
-const JOBS = [
-  {
-    id: '1',
-    title: 'Senior Frontend Developer',
-    company: 'Acme Inc',
-    location: 'Remote',
-    type: 'Full-time',
-    salary: '$120,000 - $150,000',
-    description:
-      "We're looking for an experienced frontend developer to join our team. You'll be responsible for building user interfaces, implementing features, and collaborating with designers and backend developers.",
-    requirements:
-      '5+ years of experience with React, TypeScript, and modern frontend development practices.',
-    posted: '2 days ago',
-    featured: true,
-    category: 'Engineering',
-    experience: 'Senior',
-  },
-  {
-    id: '2',
-    title: 'UX Designer',
-    company: 'TechCorp',
-    location: 'New York, NY',
-    type: 'Full-time',
-    salary: '$90,000 - $120,000',
-    description:
-      "Join our design team to create beautiful and intuitive user experiences. You'll work on product design, user research, and collaborate with developers to implement your designs.",
-    requirements:
-      '3+ years of experience in UX/UI design, proficiency with Figma, and a strong portfolio.',
-    posted: '5 days ago',
-    featured: true,
-    category: 'Design',
-    experience: 'Mid-level',
-  },
-  {
-    id: '3',
-    title: 'Backend Developer',
-    company: 'DataSystems',
-    location: 'San Francisco, CA',
-    type: 'Contract',
-    salary: '$100,000 - $130,000',
-    description:
-      "Help us build scalable backend systems using Node.js and PostgreSQL. You'll be working on API development, database design, and system architecture.",
-    requirements:
-      'Experience with Node.js, Express, PostgreSQL, and RESTful API design.',
-    posted: '1 week ago',
-    featured: false,
-    category: 'Engineering',
-    experience: 'Mid-level',
-  },
-  {
-    id: '4',
-    title: 'Product Manager',
-    company: 'InnovateCo',
-    location: 'Remote',
-    type: 'Full-time',
-    salary: '$110,000 - $140,000',
-    description:
-      "Lead product development and work closely with engineering and design teams. You'll be responsible for product strategy, roadmap planning, and feature prioritization.",
-    requirements:
-      '3+ years of product management experience, preferably in SaaS products.',
-    posted: '2 weeks ago',
-    featured: false,
-    category: 'Product',
-    experience: 'Mid-level',
-  },
-  {
-    id: '5',
-    title: 'DevOps Engineer',
-    company: 'CloudTech',
-    location: 'Austin, TX',
-    type: 'Full-time',
-    salary: '$130,000 - $160,000',
-    description:
-      "Manage our cloud infrastructure and CI/CD pipelines. You'll be responsible for deployment automation, monitoring, and infrastructure as code.",
-    requirements:
-      'Experience with AWS, Kubernetes, Docker, and CI/CD tools like Jenkins or GitHub Actions.',
-    posted: '3 weeks ago',
-    featured: false,
-    category: 'Engineering',
-    experience: 'Senior',
-  },
-  {
-    id: '6',
-    title: 'Marketing Specialist',
-    company: 'GrowthLabs',
-    location: 'Chicago, IL',
-    type: 'Part-time',
-    salary: '$60,000 - $80,000',
-    description:
-      "Help us grow our brand through digital marketing campaigns. You'll be responsible for social media management, content creation, and campaign analysis.",
-    requirements:
-      'Experience with digital marketing, social media platforms, and analytics tools.',
-    posted: '3 weeks ago',
-    featured: false,
-    category: 'Marketing',
-    experience: 'Entry-level',
-  },
-  {
-    id: '7',
-    title: 'Customer Support Representative',
-    company: 'ServiceFirst',
-    location: 'Remote',
-    type: 'Full-time',
-    salary: '$50,000 - $65,000',
-    description:
-      "Provide excellent customer service and support to our users. You'll be handling customer inquiries, troubleshooting issues, and collecting feedback.",
-    requirements:
-      'Strong communication skills, problem-solving abilities, and customer service experience.',
-    posted: '1 month ago',
-    featured: false,
-    category: 'Customer Support',
-    experience: 'Entry-level',
-  },
-  {
-    id: '8',
-    title: 'Data Analyst',
-    company: 'InsightData',
-    location: 'Boston, MA',
-    type: 'Full-time',
-    salary: '$85,000 - $110,000',
-    description:
-      "Analyze user data and provide insights to improve our product. You'll be working with large datasets, creating visualizations, and presenting findings to stakeholders.",
-    requirements:
-      'Experience with SQL, data visualization tools, and statistical analysis.',
-    posted: '1 month ago',
-    featured: false,
-    category: 'Data',
-    experience: 'Mid-level',
-  },
-  {
-    id: '9',
-    title: 'Mobile Developer (iOS)',
-    company: 'AppWorks',
-    location: 'Seattle, WA',
-    type: 'Full-time',
-    salary: '$110,000 - $140,000',
-    description:
-      "Build and maintain our iOS applications. You'll be responsible for implementing new features, fixing bugs, and improving app performance.",
-    requirements:
-      'Experience with Swift, iOS SDK, and mobile app development best practices.',
-    posted: '1 month ago',
-    featured: false,
-    category: 'Engineering',
-    experience: 'Mid-level',
-  },
-  {
-    id: '10',
-    title: 'HR Manager',
-    company: 'PeopleFirst',
-    location: 'Denver, CO',
-    type: 'Full-time',
-    salary: '$90,000 - $120,000',
-    description:
-      "Lead our HR department and manage all aspects of human resources. You'll be responsible for recruitment, employee relations, benefits administration, and policy development.",
-    requirements:
-      '5+ years of HR experience, knowledge of employment laws, and strong interpersonal skills.',
-    posted: '1 month ago',
-    featured: false,
-    category: 'Human Resources',
-    experience: 'Senior',
-  },
-  {
-    id: '11',
-    title: 'Junior Web Developer',
-    company: 'WebSolutions',
-    location: 'Remote',
-    type: 'Full-time',
-    salary: '$60,000 - $80,000',
-    description:
-      "Join our web development team to build responsive websites and web applications. You'll be working with HTML, CSS, JavaScript, and modern frameworks.",
-    requirements:
-      'Knowledge of HTML, CSS, JavaScript, and at least one modern framework like React or Vue.',
-    posted: '2 weeks ago',
-    featured: false,
-    category: 'Engineering',
-    experience: 'Entry-level',
-  },
-  {
-    id: '12',
-    title: 'Content Writer',
-    company: 'ContentHub',
-    location: 'Remote',
-    type: 'Contract',
-    salary: '$40 - $60 per hour',
-    description:
-      "Create engaging content for our blog, social media, and marketing materials. You'll be responsible for researching topics, writing articles, and editing content.",
-    requirements:
-      'Strong writing skills, attention to detail, and experience with content creation.',
-    posted: '3 weeks ago',
-    featured: false,
-    category: 'Marketing',
-    experience: 'Mid-level',
-  },
-];
