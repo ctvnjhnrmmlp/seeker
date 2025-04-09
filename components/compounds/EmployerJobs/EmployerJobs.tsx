@@ -26,6 +26,7 @@ import {
 import JobService from '@/services/seeker/jobs';
 import { convertToDateFormat } from '@/utilities/functions';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import _ from 'lodash';
 import {
   Clock,
   MoreHorizontal,
@@ -93,7 +94,6 @@ export default function EmployerJobs({ email }: { email: string }) {
           </Button>
         </Link>
       </div>
-
       <Card>
         <CardHeader className='pb-3'>
           <CardTitle>Job Listings</CardTitle>
@@ -129,7 +129,6 @@ export default function EmployerJobs({ email }: { email: string }) {
               </Select>
             </div>
           </div>
-
           {filteredJobs.length === 0 ? (
             <div className='text-center py-10'>
               <p className='text-muted-foreground'>No jobs found.</p>
@@ -137,23 +136,25 @@ export default function EmployerJobs({ email }: { email: string }) {
           ) : (
             <div className='rounded-md border'>
               <div className='grid grid-cols-12 gap-2 p-4 text-sm font-medium border-b'>
-                <div className='col-span-4'>Job Title</div>
+                <div className='col-span-2'>Job Title</div>
                 <div className='col-span-2'>Location</div>
                 <div className='col-span-1'>Type</div>
-                <div className='col-span-2'>Posted</div>
+                <div className='col-span-1'>Posted</div>
                 <div className='col-span-1 text-right'>Actions</div>
               </div>
               {filteredJobs.map((job) => (
                 <Link key={job.id} href={`/users/employers/jobs/${job.id}`}>
                   <div className='grid grid-cols-12 gap-2 p-4 text-sm items-center hover:bg-muted/50'>
-                    <div className='col-span-4 font-medium'>{job.title}</div>
+                    <div className='col-span-2 text-muted-foreground'>
+                      {job.title}
+                    </div>
                     <div className='col-span-2 text-muted-foreground'>
                       {job.location}
                     </div>
                     <div className='col-span-1 text-muted-foreground'>
-                      {job.type}
+                      {_.capitalize(job.type)}
                     </div>
-                    <div className='col-span-2 flex items-center gap-1 text-muted-foreground'>
+                    <div className='col-span-1 flex items-center gap-1 text-muted-foreground'>
                       <Clock className='h-3 w-3' />
                       <span>
                         {convertToDateFormat(job.createdAt.toString())}
