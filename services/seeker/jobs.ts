@@ -2,6 +2,15 @@ import { JobSchema } from '@/lib/zod';
 import { Job, User } from '@prisma/client';
 import { z } from 'zod';
 
+interface JobWithApplicants extends Job {
+  user: User;
+}
+
+interface JobApplicants {
+  applicants: number;
+  job: JobWithApplicants;
+}
+
 export default class JobService {
   static endpoint = `${process.env.NEXT_PUBLIC_BASE_URL}/api/jobs`;
 
@@ -109,14 +118,7 @@ export default class JobService {
   }: {
     email: string;
     query: Record<string, string>;
-  }): Promise<
-    | {
-        applicants: number;
-        job: Job;
-        user: User;
-      }[]
-    | []
-  > {
+  }): Promise<JobApplicants[] | []> {
     try {
       const response = await fetch(`${this.endpoint}/applicants/find`, {
         method: 'POST',

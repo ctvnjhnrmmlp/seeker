@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import ApplicationService from '@/services/seeker/applications';
 import JobService from '@/services/seeker/jobs';
 import { convertToDateFormat } from '@/utilities/functions';
 import { useQuery } from '@tanstack/react-query';
@@ -47,7 +46,7 @@ export default function EmployerDashboard({
       }),
   });
 
-  const { data: applicantCountServer } = useQuery({
+  const { data: applicantsCountServer } = useQuery({
     queryKey: ['getApplicationsEmployerDashboard'],
     queryFn: async () =>
       await JobService.findJobApplicantsByQuery({
@@ -56,7 +55,7 @@ export default function EmployerDashboard({
       }),
   });
 
-  const { data: recentApplicantionsServer } = useQuery({
+  const { data: applicantsRecentServer } = useQuery({
     queryKey: ['getRecentApplicationsEmployerDashboard'],
     queryFn: async () =>
       await JobService.findJobApplicantsByQuery({
@@ -66,8 +65,6 @@ export default function EmployerDashboard({
         },
       }),
   });
-
-  console.log(recentApplicantionsServer);
 
   return (
     <div className='flex-1 space-y-6 p-6'>
@@ -99,7 +96,7 @@ export default function EmployerDashboard({
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>
-              {applicantCountServer?.reduce(
+              {applicantsCountServer?.reduce(
                 (sum, job) => sum + job.applicants,
                 0
               )}
@@ -166,7 +163,7 @@ export default function EmployerDashboard({
               <div className='col-span-2'>Location</div>
               <div className='col-span-2'>Type</div>
             </div>
-            {recentApplicantionsServer?.map((application) => (
+            {applicantsRecentServer?.map((application) => (
               <div
                 key={application.job.id}
                 className='grid grid-cols-12 gap-2 p-4 text-sm items-center hover:bg-muted/50'
