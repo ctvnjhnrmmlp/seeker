@@ -162,7 +162,7 @@ export default function EmployerDashboard({ email }: { email: string }) {
               <div className='col-span-1'>Status</div>
               <div className='col-span-2'>Match</div>
             </div>
-            {recentApplications.map((application) => (
+            {/* {recentApplications.map((application) => (
               <div
                 key={application.id}
                 className='grid grid-cols-12 gap-2 p-4 text-sm items-center hover:bg-muted/50'
@@ -194,9 +194,9 @@ export default function EmployerDashboard({ email }: { email: string }) {
                   </span>
                 </div>
               </div>
-            ))}
+            ))} */}
           </div>
-          <div className='flex justify-center'>
+          <div className='flex'>
             <Link href='/dashboard/applications'>
               <Button variant='outline'>View All Applications</Button>
             </Link>

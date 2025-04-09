@@ -28,6 +28,9 @@ export async function POST(req: Request) {
         orderBy: {
           createdAt: 'desc',
         },
+        where: {
+          userId: user.id,
+        },
       });
 
       return NextResponse.json(
