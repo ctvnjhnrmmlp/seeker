@@ -217,7 +217,6 @@ export default function ApplicantJob({
                               container: 'w-full',
                             }}
                             content={{
-                              button: 'Upload',
                               allowedContent:
                                 '.pdf, .doc, .docx (max 4MB) Tip: Click the button during upload to cancel.',
                             }}
