@@ -18,7 +18,6 @@ import {
   Home,
   LogOut,
   Menu,
-  Search,
   Settings,
   User,
 } from 'lucide-react';
@@ -48,12 +47,6 @@ export default function ApplicantLayout({ children }: { children: ReactNode }) {
       href: '/users/applicants/saves',
       icon: FileText,
       active: pathname === '/users/applicants/saves',
-    },
-    {
-      label: 'Search',
-      href: '/users/applicants/jobs',
-      icon: Search,
-      active: pathname === '/users/applicants/jobs',
     },
   ];
 

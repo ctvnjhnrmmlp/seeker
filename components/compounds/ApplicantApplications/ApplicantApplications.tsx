@@ -26,6 +26,7 @@ import {
 import ApplicationService from '@/services/seeker/applications';
 import { convertToDateFormat } from '@/utilities/functions';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import _ from 'lodash';
 import { Clock, MoreHorizontal, Search, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -167,7 +168,7 @@ export default function ApplicantApplications({
                       {application.job.location}
                     </div>
                     <div className='col-span-1 text-muted-foreground'>
-                      {application.job.type}
+                      {_.capitalize(application.job.type)}
                     </div>
                     <div className='col-span-2 flex items-center gap-1 text-muted-foreground'>
                       <Clock className='h-3 w-3' />

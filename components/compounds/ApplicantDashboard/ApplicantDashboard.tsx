@@ -14,15 +14,7 @@ import ApplicationService from '@/services/seeker/applications';
 import { convertToDateFormat } from '@/utilities/functions';
 import { useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
-import {
-  Bookmark,
-  Briefcase,
-  ChevronDown,
-  Clock,
-  FileText,
-  PlusCircle,
-  Search,
-} from 'lucide-react';
+import { Bookmark, Briefcase, Clock, Search } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ApplicantDashboard({
@@ -88,7 +80,7 @@ export default function ApplicantDashboard({
             {applicationsServer?.map((application) => (
               <Link
                 key={application.id}
-                href={`/users/applicants/jobs/${application.jobId}`}
+                href={`/users/applicants/applications/${application.jobId}`}
               >
                 <Card className='h-full'>
                   <CardHeader className='pb-2'>

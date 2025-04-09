@@ -1,4 +1,4 @@
-import { Application } from '@prisma/client';
+import { Application, Job } from '@prisma/client';
 
 export default class ApplicationService {
   static endpoint = `${process.env.NEXT_PUBLIC_BASE_URL}/api/applications`;
@@ -38,7 +38,7 @@ export default class ApplicationService {
   }: {
     email: string;
     id: string;
-  }): Promise<Application | null> {
+  }): Promise<Job | null> {
     try {
       const response = await fetch(`${this.endpoint}/find/id`, {
         method: 'POST',
@@ -50,7 +50,8 @@ export default class ApplicationService {
       });
 
       if (response.ok) {
-        return await response.json();
+        const data = await response.json();
+        return data.data;
       }
 
       throw new Error();
