@@ -149,7 +149,8 @@ export default function EmployerApplicants({
                 <div className='col-span-2'>Position</div>
                 <div className='col-span-2'>Company</div>
                 <div className='col-span-2'>Location</div>
-                <div className='col-span-2'>Type</div>
+                <div className='col-span-1'>Type</div>
+                <div className='col-span-1'>Applied</div>
               </div>
               {filteredApplicantions?.map((application) => (
                 <div
@@ -171,10 +172,10 @@ export default function EmployerApplicants({
                   <div className='col-span-2 text-muted-foreground'>
                     {application.job.location}
                   </div>
-                  <div className='col-span-2 text-muted-foreground'>
+                  <div className='col-span-1 text-muted-foreground'>
                     {_.capitalize(application.job.type)}
                   </div>
-                  <div className='col-span-2 text-muted-foreground'>
+                  <div className='col-span-1 text-muted-foreground'>
                     {convertToDateFormat(application.job.createdAt.toString())}
                   </div>
                 </div>
