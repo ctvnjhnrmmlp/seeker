@@ -103,13 +103,15 @@ export default class JobService {
     }
   }
 
-  static async findJobApplicantCount({
-    email,
-  }: {
-    email: string;
-  }): Promise<Job[] | []> {
+  static async findJobApplicants({ email }: { email: string }): Promise<
+    | {
+        applicants: number;
+        job: Job;
+      }[]
+    | []
+  > {
     try {
-      const response = await fetch(`${this.endpoint}/applicants/count/find`, {
+      const response = await fetch(`${this.endpoint}/applicants/find`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

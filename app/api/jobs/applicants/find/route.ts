@@ -33,14 +33,13 @@ export async function POST(req: Request) {
       },
     });
 
-    const jobWithApplicantCounts = jobs.map((job) => ({
-      jobId: job.id,
-      title: job.title,
-      applicantCount: job.application.length,
+    const jobWithApplicantCount = jobs.map((job) => ({
+      job,
+      applicants: job.application.length,
     }));
 
     return NextResponse.json(
-      { message: 'Applicant counts found.', data: jobWithApplicantCounts },
+      { message: 'Applicant counts found.', data: jobWithApplicantCount },
       { status: 200 }
     );
   } catch (error) {

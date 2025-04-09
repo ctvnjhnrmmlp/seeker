@@ -49,7 +49,7 @@ export default function EmployerDashboard({
   const { data: applicantCountServer } = useQuery({
     queryKey: ['getApplicationsEmployerDashboard'],
     queryFn: async () =>
-      await JobService.findJobApplicantCount({
+      await JobService.findJobApplicants({
         email,
       }),
   });
@@ -84,7 +84,10 @@ export default function EmployerDashboard({
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>
-              {applicantCountServer?.length}
+              {applicantCountServer?.reduce(
+                (sum, job) => sum + job.applicants,
+                0
+              )}
             </div>
           </CardContent>
         </Card>
