@@ -26,7 +26,7 @@ export async function DELETE(req: Request) {
 
     if (!id) {
       return NextResponse.json(
-        { error: 'Missing job ID or job data.' },
+        { error: 'Missing job ID in request body.' },
         { status: 400 }
       );
     }
@@ -39,15 +39,31 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: 'Job not found.' }, { status: 404 });
     }
 
-    const deletedJob = await Prisma.job.delete({
-      where: { id },
-      include: {
-        application: true,
+    if (job.userId !== user.id) {
+      return NextResponse.json(
+        { error: 'Unauthorized: You do not own this job.' },
+        { status: 403 }
+      );
+    }
+
+    await Prisma.application.deleteMany({
+      where: {
+        jobId: id,
       },
     });
 
-    return NextResponse.json({ data: deletedJob }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ error: error }, { status: 500 });
+    const deletedJob = await Prisma.job.delete({
+      where: { id },
+    });
+
+    return NextResponse.json(
+      { message: 'Job deleted.', data: deletedJob },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: 'Internal Server Error', details: error.message || error },
+      { status: 500 }
+    );
   }
 }
