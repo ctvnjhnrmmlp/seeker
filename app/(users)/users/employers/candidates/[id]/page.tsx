@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import EmployerCandidates from '@/components/compounds/EmployerCandidates/EmployerCandidates';
+import EmployerCandidate from '@/components/compounds/EmployerCandidate/EmployerCandidate';
 import { redirect } from 'next/navigation';
 
 export default async function Page() {
@@ -12,7 +12,7 @@ export default async function Page() {
   return (
     <main>
       <section className='flex justify-center w-full'>
-        <EmployerCandidates email={session.user.email} />
+        <EmployerCandidate />
       </section>
     </main>
   );
