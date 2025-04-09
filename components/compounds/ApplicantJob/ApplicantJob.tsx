@@ -18,10 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
 import ApplicationService from '@/services/seeker/applications';
 import JobService from '@/services/seeker/jobs';
 import { convertToDateFormat } from '@/utilities/functions';
@@ -33,13 +30,10 @@ import {
   Briefcase,
   Building,
   Calendar,
-  Check,
   Clock,
   DollarSign,
   ExternalLink,
-  FileText,
   Share2,
-  Upload,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

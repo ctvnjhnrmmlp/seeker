@@ -141,7 +141,6 @@ export default function ApplicantApplications({
               </Select>
             </div>
           </div>
-
           {filteredApplications.length === 0 ? (
             <div className='text-center py-10'>
               <p className='text-muted-foreground'>No jobs found.</p>

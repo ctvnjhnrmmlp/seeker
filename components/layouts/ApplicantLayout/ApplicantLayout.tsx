@@ -14,7 +14,6 @@ import {
   Briefcase,
   Building,
   ChevronDown,
-  FileText,
   Home,
   LogOut,
   Menu,
@@ -41,12 +40,6 @@ export default function ApplicantLayout({ children }: { children: ReactNode }) {
       href: '/users/applicants/applications',
       icon: Briefcase,
       active: pathname === '/users/applicants/applications',
-    },
-    {
-      label: 'Saves',
-      href: '/users/applicants/saves',
-      icon: FileText,
-      active: pathname === '/users/applicants/saves',
     },
   ];
 

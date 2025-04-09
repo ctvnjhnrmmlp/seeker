@@ -73,7 +73,6 @@ export default function ApplicantDashboard({
       <Tabs defaultValue='applied' className='space-y-4'>
         <TabsList>
           <TabsTrigger value='applied'>Applied Jobs</TabsTrigger>
-          <TabsTrigger value='saves'>Saved Jobs</TabsTrigger>
         </TabsList>
         <TabsContent value='applied' className='space-y-4'>
           <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
@@ -118,7 +117,6 @@ export default function ApplicantDashboard({
             </Link>
           </div>
         </TabsContent>
-        <TabsContent value='saves' className='space-y-4'></TabsContent>
       </Tabs>
     </div>
   );
