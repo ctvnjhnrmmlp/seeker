@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import ApplicationService from '@/services/seeker/applications';
 import JobService from '@/services/seeker/jobs';
 import { convertToDateFormat } from '@/utilities/functions';
 import { useQuery } from '@tanstack/react-query';
@@ -49,10 +50,24 @@ export default function EmployerDashboard({
   const { data: applicantCountServer } = useQuery({
     queryKey: ['getApplicationsEmployerDashboard'],
     queryFn: async () =>
-      await JobService.findJobApplicants({
+      await JobService.findJobApplicantsByQuery({
         email,
+        query: {},
       }),
   });
+
+  const { data: recentApplicantionsServer } = useQuery({
+    queryKey: ['getRecentApplicationsEmployerDashboard'],
+    queryFn: async () =>
+      await JobService.findJobApplicantsByQuery({
+        email,
+        query: {
+          recent: 'true',
+        },
+      }),
+  });
+
+  console.log(recentApplicantionsServer);
 
   return (
     <div className='flex-1 space-y-6 p-6'>
@@ -145,45 +160,34 @@ export default function EmployerDashboard({
         <TabsContent value='applications' className='space-y-4'>
           <div className='rounded-md border'>
             <div className='grid grid-cols-12 gap-2 p-4 text-sm font-medium border-b'>
-              <div className='col-span-4'>Candidate</div>
-              <div className='col-span-3'>Position</div>
-              <div className='col-span-2'>Applied</div>
-              <div className='col-span-1'>Status</div>
-              <div className='col-span-2'>Match</div>
+              <div className='col-span-2'>Candidate</div>
+              <div className='col-span-2'>Position</div>
+              <div className='col-span-2'>Company</div>
+              <div className='col-span-2'>Location</div>
+              <div className='col-span-2'>Type</div>
             </div>
-            {/* {recentApplications.map((application) => (
+            {recentApplicantionsServer?.map((application) => (
               <div
-                key={application.id}
+                key={application.job.id}
                 className='grid grid-cols-12 gap-2 p-4 text-sm items-center hover:bg-muted/50'
               >
-                <div className='col-span-4 font-medium'>{application.name}</div>
-                <div className='col-span-3 text-muted-foreground'>
-                  {application.position}
+                <div className='col-span-2 font-medium'>
+                  {application.job.user.name}
                 </div>
                 <div className='col-span-2 text-muted-foreground'>
-                  {application.applied}
+                  {application.job.title}
                 </div>
-                <div className='col-span-1'>
-                  <div
-                    className={`text-xs font-medium px-2 py-1 rounded-full text-center ${
-                      application.status === 'New'
-                        ? 'bg-blue-100 text-blue-700'
-                        : application.status === 'Reviewed'
-                        ? 'bg-amber-100 text-amber-700'
-                        : 'bg-green-100 text-green-700'
-                    }`}
-                  >
-                    {application.status}
-                  </div>
+                <div className='col-span-2 text-muted-foreground'>
+                  {application.job.company}
                 </div>
-                <div className='col-span-2 flex items-center gap-2'>
-                  <Progress value={application.match} className='h-2' />
-                  <span className='text-xs font-medium'>
-                    {application.match}%
-                  </span>
+                <div className='col-span-2 text-muted-foreground'>
+                  {application.job.location}
+                </div>
+                <div className='col-span-2 text-muted-foreground'>
+                  {_.capitalize(application.job.type)}
                 </div>
               </div>
-            ))} */}
+            ))}
           </div>
           <div className='flex'>
             <Link href='/dashboard/applications'>

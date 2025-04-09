@@ -1,5 +1,5 @@
 import { JobSchema } from '@/lib/zod';
-import { Job } from '@prisma/client';
+import { Job, User } from '@prisma/client';
 import { z } from 'zod';
 
 export default class JobService {
@@ -103,16 +103,24 @@ export default class JobService {
     }
   }
 
-  static async findJobApplicants({ email }: { email: string }): Promise<
+  static async findJobApplicantsByQuery({
+    email,
+    query,
+  }: {
+    email: string;
+    query: Record<string, string>;
+  }): Promise<
     | {
         applicants: number;
         job: Job;
+        user: User;
       }[]
     | []
   > {
     try {
       const response = await fetch(`${this.endpoint}/applicants/find`, {
         method: 'POST',
+        body: JSON.stringify({ query }),
         headers: {
           'Content-Type': 'application/json',
           'x-user-email': email,

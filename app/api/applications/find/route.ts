@@ -28,6 +28,10 @@ export async function POST(req: Request) {
         orderBy: {
           createdAt: 'desc',
         },
+        include: {
+          job: true,
+          user: true,
+        },
       });
 
       return NextResponse.json(

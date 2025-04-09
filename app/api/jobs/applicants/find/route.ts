@@ -25,11 +25,17 @@ export async function POST(req: Request) {
       select: {
         id: true,
         title: true,
-        application: {
-          select: {
-            id: true,
-          },
-        },
+        company: true,
+        location: true,
+        type: true,
+        minimumSalary: true,
+        maximumSalary: true,
+        description: true,
+        requirements: true,
+        url: true,
+        email: true,
+        application: true,
+        user: true,
       },
     });
 
