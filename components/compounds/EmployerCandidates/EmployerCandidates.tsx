@@ -81,22 +81,25 @@ export default function EmployerCandidates({ email }: { email: string }) {
                 <div className='col-span-2'>Email</div>
                 <div className='col-span-1'>Applied</div>
               </div>
-              {filteredApplicantions?.map((application) => (
-                <div
-                  key={application.job.id}
-                  className='grid grid-cols-12 gap-2 p-4 text-sm items-center hover:bg-muted/50'
-                >
-                  <div className='col-span-2 text-muted-foreground'>
-                    {application.job.user.name}
+              {filteredApplicantions?.map((jobApplication) =>
+                // @ts-ignore
+                jobApplication.job.application.map((applicant) => (
+                  <div
+                    key={applicant.id}
+                    className='grid grid-cols-12 gap-2 p-4 text-sm items-center hover:bg-muted/50'
+                  >
+                    <div className='col-span-2 text-muted-foreground'>
+                      {applicant.user?.name || 'N/A'}
+                    </div>
+                    <div className='col-span-2 text-muted-foreground'>
+                      {applicant.user?.email || 'N/A'}
+                    </div>
+                    <div className='col-span-2 text-muted-foreground'>
+                      {convertToDateFormat(applicant.createdAt.toString())}
+                    </div>
                   </div>
-                  <div className='col-span-2 text-muted-foreground'>
-                    {application.job.email}
-                  </div>
-                  <div className='col-span-1 text-muted-foreground'>
-                    {convertToDateFormat(application.job.createdAt.toString())}
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           )}
         </CardContent>

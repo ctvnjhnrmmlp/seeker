@@ -41,7 +41,7 @@ export default function EmployerApplicants({ email }: { email: string }) {
   const normalizeType = (type: string) =>
     type.toLowerCase().replace(/[-\s]/g, '');
 
-  const filteredApplicantions = applicantionsServer.filter((application) => {
+  const filteredApplications = applicantionsServer.filter((application) => {
     const matchesSearch =
       application?.job?.user?.name
         ?.toLowerCase()
@@ -131,7 +131,7 @@ export default function EmployerApplicants({ email }: { email: string }) {
               </Select>
             </div>
           </div>
-          {filteredApplicantions.length === 0 ? (
+          {filteredApplications.length === 0 ? (
             <div className='text-center py-10'>
               <p className='text-muted-foreground'>No applications found.</p>
             </div>
@@ -146,34 +146,37 @@ export default function EmployerApplicants({ email }: { email: string }) {
                 <div className='col-span-1'>Type</div>
                 <div className='col-span-1'>Applied</div>
               </div>
-              {filteredApplicantions?.map((application) => (
-                <div
-                  key={application.job.id}
-                  className='grid grid-cols-12 gap-2 p-4 text-sm items-center hover:bg-muted/50'
-                >
-                  <div className='col-span-2 text-muted-foreground'>
-                    {application.job.user.name}
+              {filteredApplications?.map((jobApplication) =>
+                // @ts-ignore
+                jobApplication.job.application.map((applicant) => (
+                  <div
+                    key={applicant.id}
+                    className='grid grid-cols-12 gap-2 p-4 text-sm items-center hover:bg-muted/50'
+                  >
+                    <div className='col-span-2 text-muted-foreground'>
+                      {applicant.user?.name || 'N/A'}
+                    </div>
+                    <div className='col-span-2 text-muted-foreground'>
+                      {applicant.user?.email || 'N/A'}
+                    </div>
+                    <div className='col-span-2 text-muted-foreground'>
+                      {jobApplication.job.title}
+                    </div>
+                    <div className='col-span-1 text-muted-foreground'>
+                      {jobApplication.job.company}
+                    </div>
+                    <div className='col-span-1 text-muted-foreground'>
+                      {jobApplication.job.location}
+                    </div>
+                    <div className='col-span-1 text-muted-foreground'>
+                      {_.capitalize(jobApplication.job.type)}
+                    </div>
+                    <div className='col-span-1 text-muted-foreground'>
+                      {convertToDateFormat(applicant.createdAt.toString())}
+                    </div>
                   </div>
-                  <div className='col-span-2 text-muted-foreground'>
-                    {application.job.email}
-                  </div>
-                  <div className='col-span-2 text-muted-foreground'>
-                    {application.job.title}
-                  </div>
-                  <div className='col-span-2 text-muted-foreground'>
-                    {application.job.company}
-                  </div>
-                  <div className='col-span-2 text-muted-foreground'>
-                    {application.job.location}
-                  </div>
-                  <div className='col-span-1 text-muted-foreground'>
-                    {_.capitalize(application.job.type)}
-                  </div>
-                  <div className='col-span-1 text-muted-foreground'>
-                    {convertToDateFormat(application.job.createdAt.toString())}
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           )}
         </CardContent>

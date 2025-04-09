@@ -34,9 +34,25 @@ export async function POST(req: Request) {
         requirements: true,
         url: true,
         email: true,
-        application: true,
         createdAt: true,
         user: true,
+        application: {
+          select: {
+            id: true,
+            createdAt: true,
+            updatedAt: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+                skills: true,
+                createdAt: true,
+              },
+            },
+          },
+        },
       },
     });
 
