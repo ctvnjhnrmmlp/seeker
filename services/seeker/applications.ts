@@ -12,15 +12,17 @@ export default class ApplicationService {
     email,
     userId,
     jobId,
+    resumeUrl,
   }: {
     email: string;
     userId: string;
     jobId: string;
+    resumeUrl: string;
   }): Promise<ApplicationIncluded | null> {
     try {
       const response = await fetch(`${this.endpoint}/create`, {
         method: 'POST',
-        body: JSON.stringify({ userId, jobId }),
+        body: JSON.stringify({ userId, jobId, resumeUrl }),
         headers: {
           'Content-Type': 'application/json',
           'x-user-email': email,

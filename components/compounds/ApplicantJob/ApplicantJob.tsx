@@ -18,9 +18,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { UploadButton } from '@/lib/uploadthing';
 import ApplicationService from '@/services/seeker/applications';
 import JobService from '@/services/seeker/jobs';
 import { convertToDateFormat } from '@/utilities/functions';
@@ -28,21 +28,19 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
 import {
   ArrowLeft,
-  BookmarkIcon,
   Briefcase,
   Building,
   Calendar,
   Clock,
   DollarSign,
   ExternalLink,
-  Share2,
-  Upload,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { twMerge } from 'tailwind-merge';
 
 export default function ApplicantJob({
   email,
@@ -54,7 +52,6 @@ export default function ApplicantJob({
   jobId: string;
 }) {
   const router = useRouter();
-  const [isSaved, setIsSaved] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
   const [isApplying, setIsApplying] = useState(false);
   const [applicationData, setApplicationData] = useState({
@@ -64,21 +61,11 @@ export default function ApplicantJob({
     resume: null as File | null,
     coverLetter: '',
   });
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setApplicationData({
-        ...applicationData,
-        resume: e.target.files[0],
-      });
-    }
-  };
+  const resumeUrlRef = useRef('');
 
   const handleSubmitApplication = (e: React.FormEvent) => {
     e.preventDefault();
-
     setIsApplying(true);
-
     setTimeout(() => {
       setIsApplying(false);
       toast('Application Submitted', {
@@ -99,16 +86,19 @@ export default function ApplicantJob({
       email,
       userId,
       jobId,
+      resumeUrl,
     }: {
       email: string;
       userId: string;
       jobId: string;
+      resumeUrl: string;
     }) => {
       setIsApplying(true);
       return await ApplicationService.createApplication({
         email,
         userId,
         jobId,
+        resumeUrl,
       });
     },
     onSuccess: () => {
@@ -259,31 +249,25 @@ export default function ApplicantJob({
                         <div className='grid gap-2'>
                           <Label htmlFor='resume'>Resume</Label>
                           <div className='flex items-center gap-2'>
-                            <Input
-                              id='resume'
-                              type='file'
-                              className='hidden'
-                              accept='.pdf,.doc,.docx'
-                              onChange={handleFileChange}
-                              required
+                            <UploadButton
+                              config={{ cn: twMerge }}
+                              endpoint='fileUploader'
+                              appearance={{
+                                button: 'w-full bg-black text-white rounded-md',
+                                allowedContent: 'display-none',
+                                container: 'w-full',
+                              }}
+                              content={{
+                                allowedContent: 'PDF, DOC, DOCX (Max 4MB)',
+                              }}
+                              onClientUploadComplete={(res) => {
+                                resumeUrlRef.current = res[0].ufsUrl;
+                              }}
+                              onUploadError={(error: Error) => {
+                                alert(`Error. ${error.message}`);
+                              }}
                             />
-                            <Button
-                              type='button'
-                              variant='outline'
-                              onClick={() =>
-                                document.getElementById('resume')?.click()
-                              }
-                              className='w-full justify-start'
-                            >
-                              <Upload className='mr-2 h-4 w-4' />
-                              {applicationData.resume
-                                ? applicationData.resume.name
-                                : 'Upload Resume'}
-                            </Button>
                           </div>
-                          <p className='text-xs text-muted-foreground'>
-                            Accepted formats: PDF, DOC, DOCX (Max 5MB)
-                          </p>
                         </div>
                       </div>
                       <DialogFooter>
@@ -294,6 +278,7 @@ export default function ApplicantJob({
                               email,
                               userId,
                               jobId,
+                              resumeUrl: resumeUrlRef.current,
                             })
                           }
                         >

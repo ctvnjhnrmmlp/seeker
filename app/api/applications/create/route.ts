@@ -20,9 +20,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'User not found.' }, { status: 404 });
     }
 
-    const { userId, jobId } = await req.json();
+    const { userId, jobId, resumeUrl } = await req.json();
 
-    if (!userId || !jobId) {
+    if (!userId || !jobId || !resumeUrl) {
       return NextResponse.json(
         { error: 'Missing user id and/or job id.' },
         { status: 400 }
@@ -56,6 +56,7 @@ export async function POST(req: Request) {
       data: {
         userId,
         jobId,
+        resumeUrl,
       },
       include: {
         job: true,
