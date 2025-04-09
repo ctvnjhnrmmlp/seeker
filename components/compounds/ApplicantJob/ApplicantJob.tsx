@@ -54,32 +54,14 @@ export default function ApplicantJob({
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('description');
   const [isApplying, setIsApplying] = useState(false);
-  const [applicationData, setApplicationData] = useState({
+  const [resumeUploaded, setResumeUploaded] = useState(false);
+  const resumeUrlRef = useRef<{
+    name: string;
+    ufsUrl: string;
+  }>({
     name: '',
-    email: '',
-    phone: '',
-    resume: null as File | null,
-    coverLetter: '',
+    ufsUrl: '',
   });
-  const resumeUrlRef = useRef('');
-
-  const handleSubmitApplication = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsApplying(true);
-    setTimeout(() => {
-      setIsApplying(false);
-      toast('Application Submitted', {
-        description: 'Your application has been successfully submitted.',
-      });
-      setApplicationData({
-        name: '',
-        email: '',
-        phone: '',
-        resume: null,
-        coverLetter: '',
-      });
-    }, 1500);
-  };
 
   const createApplicationMutation = useMutation({
     mutationFn: async ({
@@ -135,7 +117,7 @@ export default function ApplicantJob({
         <div className='grid gap-6 lg:grid-cols-3'>
           <div className='lg:col-span-2 space-y-6'>
             <Card>
-              <CardHeader className='pb-4'>
+              <CardHeader>
                 <div className='flex items-start justify-between'>
                   <div className='flex gap-4'>
                     <div className='h-12 w-12 rounded-md bg-muted flex items-center justify-center'>
@@ -156,72 +138,51 @@ export default function ApplicantJob({
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className='pb-6'>
-                <div className='grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm mb-6'>
-                  <div className='flex flex-col gap-1'>
-                    <span className='text-muted-foreground'>Job Type</span>
-                    <div className='flex items-center gap-1 font-medium'>
-                      <Briefcase className='h-4 w-4' />
-                      <span>{_.capitalize(jobServer?.type)}</span>
+              <CardContent>
+                <div className='space-y-8'>
+                  <div className='grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm'>
+                    <div className='flex flex-col gap-1'>
+                      <span className='text-muted-foreground'>Job Type</span>
+                      <div className='flex items-center gap-1 font-medium'>
+                        <Briefcase className='h-4 w-4' />
+                        <span>{_.capitalize(jobServer?.type)}</span>
+                      </div>
+                    </div>
+                    <div className='flex flex-col gap-1'>
+                      <span className='text-muted-foreground'>Salary</span>
+                      <div className='flex items-center gap-1 font-medium'>
+                        <DollarSign className='h-4 w-4' />
+                        <span>
+                          ${jobServer?.minimumSalary} - $
+                          {jobServer?.maximumSalary}
+                        </span>
+                      </div>
+                    </div>
+                    <div className='flex flex-col gap-1'>
+                      <span className='text-muted-foreground'>Posted</span>
+                      <div className='flex items-center gap-1 font-medium'>
+                        <Clock className='h-4 w-4' />
+                        <span>
+                          {convertToDateFormat(
+                            jobServer?.createdAt.toString()!
+                          )}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <div className='flex flex-col gap-1'>
-                    <span className='text-muted-foreground'>Salary</span>
-                    <div className='flex items-center gap-1 font-medium'>
-                      <DollarSign className='h-4 w-4' />
-                      <span>
-                        ${jobServer?.minimumSalary} - $
-                        {jobServer?.maximumSalary}
-                      </span>
-                    </div>
+                  <div>
+                    <h3 className='font-semibold text-lg mb-3'>Description</h3>
+                    <p className='text-muted-foreground whitespace-pre-line'>
+                      {jobServer?.description}
+                    </p>
                   </div>
-                  <div className='flex flex-col gap-1'>
-                    <span className='text-muted-foreground'>Posted</span>
-                    <div className='flex items-center gap-1 font-medium'>
-                      <Clock className='h-4 w-4' />
-                      <span>
-                        {convertToDateFormat(jobServer?.createdAt.toString()!)}
-                      </span>
-                    </div>
+                  <div>
+                    <h3 className='font-semibold text-lg mb-3'>Requirements</h3>
+                    <p className='text-muted-foreground whitespace-pre-line'>
+                      {jobServer?.requirements}
+                    </p>
                   </div>
                 </div>
-                <Tabs value={activeTab} onValueChange={setActiveTab}>
-                  <TabsList className='grid w-full grid-cols-3'>
-                    <TabsTrigger value='description'>Description</TabsTrigger>
-                    <TabsTrigger value='company'>Company</TabsTrigger>
-                    <TabsTrigger value='benefits'>Benefits</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value='description' className='space-y-6 pt-4'>
-                    <div>
-                      <h3 className='font-semibold text-lg mb-3'>
-                        Description
-                      </h3>
-                      <p className='text-muted-foreground whitespace-pre-line'>
-                        {jobServer?.description}
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className='font-semibold text-lg mb-3'>
-                        Requirements
-                      </h3>
-                      <p className='text-muted-foreground whitespace-pre-line'>
-                        {jobServer?.requirements}
-                      </p>
-                    </div>
-                  </TabsContent>
-                  <TabsContent value='company' className='space-y-6 pt-4'>
-                    <div className='flex items-center gap-4 mb-4'>
-                      <div className='h-16 w-16 rounded-md bg-muted flex items-center justify-center'>
-                        <Building className='h-8 w-8 text-muted-foreground' />
-                      </div>
-                      <div>
-                        <h3 className='font-semibold text-lg'>
-                          {jobServer?.company}
-                        </h3>
-                      </div>
-                    </div>
-                  </TabsContent>
-                </Tabs>
               </CardContent>
             </Card>
           </div>
@@ -244,48 +205,57 @@ export default function ApplicantJob({
                         {jobServer?.company}
                       </DialogDescription>
                     </DialogHeader>
-                    <form onSubmit={handleSubmitApplication}>
-                      <div className='grid gap-4 py-4'>
-                        <div className='grid gap-2'>
-                          <Label htmlFor='resume'>Resume</Label>
-                          <div className='flex items-center gap-2'>
-                            <UploadButton
-                              config={{ cn: twMerge }}
-                              endpoint='fileUploader'
-                              appearance={{
-                                button: 'w-full bg-black text-white rounded-md',
-                                allowedContent: 'display-none',
-                                container: 'w-full',
-                              }}
-                              content={{
-                                allowedContent: 'PDF, DOC, DOCX (Max 4MB)',
-                              }}
-                              onClientUploadComplete={(res) => {
-                                resumeUrlRef.current = res[0].ufsUrl;
-                              }}
-                              onUploadError={(error: Error) => {
-                                alert(`Error. ${error.message}`);
-                              }}
-                            />
-                          </div>
+                    <div className='grid gap-4 py-4'>
+                      <div className='grid gap-2'>
+                        <Label htmlFor='resume'>Resume</Label>
+                        <div className='flex flex-col gap-2'>
+                          <UploadButton
+                            config={{ cn: twMerge }}
+                            endpoint='fileUploader'
+                            appearance={{
+                              button: 'w-full bg-black text-white rounded-md',
+                              allowedContent: 'display-none',
+                              container: 'w-full',
+                            }}
+                            content={{
+                              allowedContent: 'PDF, DOC, DOCX (Max 4MB)',
+                            }}
+                            onUploadBegin={() => {
+                              setResumeUploaded(false);
+                            }}
+                            onClientUploadComplete={(res) => {
+                              resumeUrlRef.current = res[0];
+                              setResumeUploaded(() => true);
+                            }}
+                            onUploadError={(error: Error) => {
+                              alert(`Error. ${error.message}`);
+                            }}
+                          />
+                          {resumeUploaded && (
+                            <p className='text-xs text-muted-foreground'>
+                              {resumeUrlRef.current.name}
+                            </p>
+                          )}
                         </div>
                       </div>
-                      <DialogFooter>
-                        <Button
-                          disabled={isApplying}
-                          onClick={() =>
-                            createApplicationMutation.mutate({
-                              email,
-                              userId,
-                              jobId,
-                              resumeUrl: resumeUrlRef.current,
-                            })
-                          }
-                        >
-                          {isApplying ? 'Submitting...' : 'Submit Application'}
-                        </Button>
-                      </DialogFooter>
-                    </form>
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        disabled={isApplying}
+                        onClick={() =>
+                          createApplicationMutation.mutate({
+                            email,
+                            userId,
+                            jobId,
+                            resumeUrl: resumeUrlRef.current
+                              ? resumeUrlRef?.current?.ufsUrl
+                              : '',
+                          })
+                        }
+                      >
+                        {isApplying ? 'Submitting...' : 'Submit Application'}
+                      </Button>
+                    </DialogFooter>
                   </DialogContent>
                 </Dialog>
               </CardContent>
