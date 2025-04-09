@@ -18,6 +18,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ApplicationService from '@/services/seeker/applications';
 import JobService from '@/services/seeker/jobs';
@@ -34,6 +36,7 @@ import {
   DollarSign,
   ExternalLink,
   Share2,
+  Upload,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -161,11 +164,6 @@ export default function ApplicantJob({
                       </CardDescription>
                     </div>
                   </div>
-                  {/* {job.featured && (
-                    <div className='bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full'>
-                      Featured
-                    </div>
-                  )} */}
                 </div>
               </CardHeader>
               <CardContent className='pb-6'>
@@ -230,56 +228,9 @@ export default function ApplicantJob({
                         <h3 className='font-semibold text-lg'>
                           {jobServer?.company}
                         </h3>
-                        {/* <p className='text-muted-foreground'>
-                          {job.companyIndustry}
-                        </p> */}
                       </div>
                     </div>
-                    {/* <p className='text-muted-foreground'>
-                      {job.companyDescription}
-                    </p>
-                    <div className='grid grid-cols-2 gap-4 text-sm'>
-                      <div className='flex flex-col gap-1'>
-                        <span className='text-muted-foreground'>
-                          Company Size
-                        </span>
-                        <span className='font-medium'>{job.companySize}</span>
-                      </div>
-                      <div className='flex flex-col gap-1'>
-                        <span className='text-muted-foreground'>Industry</span>
-                        <span className='font-medium'>
-                          {job.companyIndustry}
-                        </span>
-                      </div>
-                      <div className='flex flex-col gap-1'>
-                        <span className='text-muted-foreground'>Website</span>
-                        <a
-                          href={job.companyWebsite}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                          className='font-medium text-primary hover:underline flex items-center'
-                        >
-                          {job.companyWebsite.replace('https://', '')}
-                          <ExternalLink className='ml-1 h-3 w-3' />
-                        </a>
-                      </div>
-                    </div> */}
                   </TabsContent>
-                  {/* <TabsContent value='benefits' className='space-y-6 pt-4'>
-                    <h3 className='font-semibold text-lg mb-3'>
-                      Benefits & Perks
-                    </h3>
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                      {job.benefits.map((benefit, index) => (
-                        <div key={index} className='flex items-start gap-2'>
-                          <div className='mt-0.5 bg-primary/10 rounded-full p-1'>
-                            <Check className='h-4 w-4 text-primary' />
-                          </div>
-                          <span>{benefit}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </TabsContent> */}
                 </Tabs>
               </CardContent>
             </Card>
@@ -287,15 +238,6 @@ export default function ApplicantJob({
           <div className='space-y-6'>
             <Card>
               <CardContent className='space-y-4'>
-                {/* <Button
-                  className='w-full'
-                  size='lg'
-                  onClick={() =>
-                    createApplicationMutation.mutate({ email, userId, jobId })
-                  }
-                >
-                  Apply Now
-                </Button> */}
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button className='w-full' size='lg'>
@@ -304,58 +246,16 @@ export default function ApplicantJob({
                   </DialogTrigger>
                   <DialogContent className='sm:max-w-[500px]'>
                     <DialogHeader>
-                      <DialogTitle>Apply for {jobServer?.title}</DialogTitle>
+                      <DialogTitle>
+                        Apply for {jobServer?.title} position
+                      </DialogTitle>
                       <DialogDescription>
-                        {/* Complete the form below to submit your application to{' '} */}
-                        {jobServer?.company}.
+                        Complete the form below to submit your application to{' '}
+                        {jobServer?.company}
                       </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleSubmitApplication}>
-                      {/* <div className='grid gap-4 py-4'>
-                        <div className='grid gap-2'>
-                          <Label htmlFor='name'>Full Name</Label>
-                          <Input
-                            id='name'
-                            value={applicationData.name}
-                            onChange={(e) =>
-                              setApplicationData({
-                                ...applicationData,
-                                name: e.target.value,
-                              })
-                            }
-                            required
-                          />
-                        </div>
-                        <div className='grid gap-2'>
-                          <Label htmlFor='email'>Email</Label>
-                          <Input
-                            id='email'
-                            type='email'
-                            value={applicationData.email}
-                            onChange={(e) =>
-                              setApplicationData({
-                                ...applicationData,
-                                email: e.target.value,
-                              })
-                            }
-                            required
-                          />
-                        </div>
-                        <div className='grid gap-2'>
-                          <Label htmlFor='phone'>Phone Number</Label>
-                          <Input
-                            id='phone'
-                            type='tel'
-                            value={applicationData.phone}
-                            onChange={(e) =>
-                              setApplicationData({
-                                ...applicationData,
-                                phone: e.target.value,
-                              })
-                            }
-                            required
-                          />
-                        </div>
+                      <div className='grid gap-4 py-4'>
                         <div className='grid gap-2'>
                           <Label htmlFor='resume'>Resume</Label>
                           <div className='flex items-center gap-2'>
@@ -385,24 +285,7 @@ export default function ApplicantJob({
                             Accepted formats: PDF, DOC, DOCX (Max 5MB)
                           </p>
                         </div>
-                        <div className='grid gap-2'>
-                          <Label htmlFor='coverLetter'>
-                            Cover Letter (Optional)
-                          </Label>
-                          <Textarea
-                            id='coverLetter'
-                            placeholder="Tell us why you're a good fit for this position..."
-                            value={applicationData.coverLetter}
-                            onChange={(e) =>
-                              setApplicationData({
-                                ...applicationData,
-                                coverLetter: e.target.value,
-                              })
-                            }
-                            className='min-h-[100px]'
-                          />
-                        </div>
-                      </div> */}
+                      </div>
                       <DialogFooter>
                         <Button
                           disabled={isApplying}
@@ -416,35 +299,13 @@ export default function ApplicantJob({
                         >
                           {isApplying ? 'Submitting...' : 'Submit Application'}
                         </Button>
-                        {/* <Button type='submit' disabled={isApplying}>
-                          {isApplying ? 'Submitting...' : 'Submit Application'}
-                        </Button> */}
                       </DialogFooter>
                     </form>
                   </DialogContent>
                 </Dialog>
-                <div className='flex justify-between'>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => setIsSaved(!isSaved)}
-                  >
-                    <BookmarkIcon
-                      className={`mr-2 h-4 w-4 ${
-                        isSaved ? 'fill-primary text-primary' : ''
-                      }`}
-                    />
-                    {isSaved ? 'Saved' : 'Save'}
-                  </Button>
-                  <Button variant='outline' size='sm'>
-                    <Share2 className='mr-2 h-4 w-4' /> Share
-                  </Button>
-                </div>
               </CardContent>
               <CardFooter className='flex flex-col items-start gap-2 border-t pt-6'>
-                <p className='text-sm text-muted-foreground'>
-                  {jobServer?.company}
-                </p>
+                <p className='text-sm'>{jobServer?.company}</p>
                 <a
                   href={jobServer?.url}
                   target='_blank'
@@ -478,33 +339,11 @@ export default function ApplicantJob({
               </CardContent>
             </Card>
             <Card>
-              <CardHeader>
-                <CardTitle>Similar Jobs</CardTitle>
-              </CardHeader>
               <CardContent className='space-y-4'>
-                {/* {similarJobs.map((similarJob) => (
-                  <div
-                    key={similarJob.id}
-                    className='border-b pb-4 last:border-0 last:pb-0'
-                  >
-                    <h4 className='font-medium hover:text-primary'>
-                      <a href={`/careers/${similarJob.id}`}>
-                        {similarJob.title}
-                      </a>
-                    </h4>
-                    <div className='flex items-center gap-2 mt-1 text-xs text-muted-foreground'>
-                      <span>{similarJob.company}</span>
-                      <span>•</span>
-                      <span>{similarJob.location}</span>
-                    </div>
-                  </div>
-                ))} */}
-              </CardContent>
-              <CardFooter>
                 <Button variant='outline' className='w-full' asChild>
                   <Link href='/users/applicants/jobs'>View All Jobs</Link>
                 </Button>
-              </CardFooter>
+              </CardContent>
             </Card>
           </div>
         </div>
