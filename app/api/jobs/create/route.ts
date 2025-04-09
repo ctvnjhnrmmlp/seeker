@@ -1,25 +1,13 @@
 import { Prisma } from '@/database/database';
 import { NextResponse } from 'next/server';
 
-type JobRequestBody = {
-  title: string;
-  company: string;
-  location: string;
-  type: string;
-  salaryMin: string | number;
-  salaryMax: string | number;
-  description: string;
-  requirements: string;
-  applicationUrl: string;
-};
-
 export async function POST(req: Request) {
   try {
     const email = req.headers.get('x-user-email');
 
     if (!email) {
       return NextResponse.json(
-        { error: 'Missing user email in headers.' },
+        { message: 'Missing user email.' },
         { status: 400 }
       );
     }
@@ -29,10 +17,8 @@ export async function POST(req: Request) {
     });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found.' }, { status: 404 });
+      return NextResponse.json({ message: 'User not found.' }, { status: 404 });
     }
-
-    const body: JobRequestBody = await req.json();
 
     const {
       title,
@@ -44,7 +30,7 @@ export async function POST(req: Request) {
       description,
       requirements,
       applicationUrl,
-    } = body;
+    } = await req.json();
 
     if (
       !title ||
@@ -82,10 +68,10 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(
-      { message: 'Job posted successfully.', job: newJob },
+      { message: 'Job posted.', data: newJob },
       { status: 201 }
     );
   } catch (error) {
-    return NextResponse.json({ error: error }, { status: 500 });
+    return NextResponse.json({ message: error }, { status: 500 });
   }
 }

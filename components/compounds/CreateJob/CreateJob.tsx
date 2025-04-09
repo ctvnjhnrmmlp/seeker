@@ -117,7 +117,7 @@ export default function Page() {
                       name='title'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Job Title*</FormLabel>
+                          <FormLabel>Job Title</FormLabel>
                           <FormControl>
                             <Input
                               placeholder='e.g. Senior Frontend Developer'
