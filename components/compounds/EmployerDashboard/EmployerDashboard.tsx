@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import JobService from '@/services/seeker/jobs';
 import { convertToDateFormat } from '@/utilities/functions';
@@ -18,45 +17,22 @@ import _ from 'lodash';
 import { Briefcase, Clock, FileText, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 
-export default function EmployerDashboard({ email }: { email: string }) {
-  const recentApplications = [
-    {
-      id: '1',
-      name: 'Sarah Johnson',
-      position: 'Senior Frontend Developer',
-      applied: 'Today',
-      status: 'New',
-      match: 92,
-    },
-    {
-      id: '2',
-      name: 'Michael Chen',
-      position: 'UX Designer',
-      applied: 'Yesterday',
-      status: 'Reviewed',
-      match: 85,
-    },
-    {
-      id: '3',
-      name: 'Emily Rodriguez',
-      position: 'Backend Developer',
-      applied: '2 days ago',
-      status: 'Interviewing',
-      match: 78,
-    },
-    {
-      id: '4',
-      name: 'David Kim',
-      position: 'Product Manager',
-      applied: '3 days ago',
-      status: 'New',
-      match: 65,
-    },
-  ];
-
+export default function EmployerDashboard({
+  email,
+  id,
+}: {
+  email: string;
+  id: string;
+}) {
   const { data: jobsServer } = useQuery({
     queryKey: ['getJobs'],
-    queryFn: async () => await JobService.readJobs(),
+    queryFn: async () =>
+      await JobService.findJobsByQuery({
+        email,
+        query: {
+          userId: id,
+        },
+      }),
   });
 
   const { data: jobsRecentServer } = useQuery({

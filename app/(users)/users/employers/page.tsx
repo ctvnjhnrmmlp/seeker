@@ -12,7 +12,7 @@ export default async function Page() {
   return (
     <main>
       <section className='flex justify-center w-full'>
-        <EmployerDashboard email={session.user.email} />
+        <EmployerDashboard email={session.user.email} id={session.user.id} />
       </section>
     </main>
   );
