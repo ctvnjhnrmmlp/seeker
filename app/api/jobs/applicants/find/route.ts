@@ -39,6 +39,7 @@ export async function POST(req: Request) {
         application: {
           select: {
             id: true,
+            resumeUrl: true,
             createdAt: true,
             updatedAt: true,
             user: {
@@ -47,7 +48,6 @@ export async function POST(req: Request) {
                 name: true,
                 email: true,
                 image: true,
-                skills: true,
                 createdAt: true,
               },
             },

@@ -20,7 +20,7 @@ import JobService from '@/services/seeker/jobs';
 import { convertToDateFormat } from '@/utilities/functions';
 import { useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
-import { PlusCircle, Search } from 'lucide-react';
+import { ExternalLink, PlusCircle, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -85,6 +85,8 @@ export default function EmployerApplicants({ email }: { email: string }) {
     return matchesSearch && matchesStatus && matchesType;
   });
 
+  console.log(applicantionsServer);
+
   return (
     <div className='flex-1 space-y-6 p-6'>
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
@@ -140,10 +142,8 @@ export default function EmployerApplicants({ email }: { email: string }) {
               <div className='grid grid-cols-12 gap-2 p-4 text-sm font-medium border-b'>
                 <div className='col-span-2'>Candidate</div>
                 <div className='col-span-2'>Email</div>
-                <div className='col-span-2'>Position</div>
-                <div className='col-span-2'>Company</div>
-                <div className='col-span-2'>Location</div>
-                <div className='col-span-1'>Type</div>
+                <div className='col-span-5'>Resume</div>
+                <div className='col-span-1'>Job</div>
                 <div className='col-span-1'>Applied</div>
               </div>
               {filteredApplications?.map((jobApplication) =>
@@ -154,22 +154,27 @@ export default function EmployerApplicants({ email }: { email: string }) {
                     className='grid grid-cols-12 gap-2 p-4 text-sm items-center hover:bg-muted/50'
                   >
                     <div className='col-span-2 text-muted-foreground'>
-                      {applicant.user?.name || 'N/A'}
+                      {applicant.user?.name}
                     </div>
                     <div className='col-span-2 text-muted-foreground'>
-                      {applicant.user?.email || 'N/A'}
+                      {applicant.user?.email}
                     </div>
-                    <div className='col-span-2 text-muted-foreground'>
-                      {jobApplication.job.title}
+                    <div className='col-span-5 flex space-x-2 items-center text-muted-foreground'>
+                      <Link
+                        href={applicant.resumeUrl ?? '#'}
+                        target={`${applicant.resumeUrl ? '_blank' : ''}`}
+                      >
+                        {applicant.resumeUrl ?? 'N/A'}{' '}
+                      </Link>
+                      <ExternalLink className='h-3 w-3' />
                     </div>
-                    <div className='col-span-1 text-muted-foreground'>
-                      {jobApplication.job.company}
-                    </div>
-                    <div className='col-span-1 text-muted-foreground'>
-                      {jobApplication.job.location}
-                    </div>
-                    <div className='col-span-1 text-muted-foreground'>
-                      {_.capitalize(jobApplication.job.type)}
+                    <div className='col-span-1 flex space-x-2 items-center text-muted-foreground'>
+                      <Link
+                        href={`/users/employers/jobs/${jobApplication.job.id}`}
+                      >
+                        {jobApplication.job.title}
+                        <ExternalLink className='inline h-3 w-3 ml-1' />
+                      </Link>
                     </div>
                     <div className='col-span-1 text-muted-foreground'>
                       {convertToDateFormat(applicant.createdAt.toString())}
