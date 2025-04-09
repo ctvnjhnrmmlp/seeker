@@ -77,7 +77,8 @@ export default class ApplicationService {
       });
 
       if (response.ok) {
-        return await response.json();
+        const data = await response.json();
+        return data.data;
       }
 
       throw new Error();
